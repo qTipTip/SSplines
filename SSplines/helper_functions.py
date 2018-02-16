@@ -127,3 +127,49 @@ def r2(B):
     for i, b in enumerate(B):
         R[i] = r2_single(B)
     return R
+
+
+def evaluate_non_zero_basis_splines(triangle, d, b):
+    """
+    Evaluates the non-zero basis splines of degree d over a set of point(s) represented by its barycentric coordinates
+    over the PS12 split of a triangle.
+    :param triangle: vertices of triangle
+    :param d: degree of spline
+    :param b: barycentric coordinates
+    :return: array, ndarray of non-zero basis splines evaluated at x.
+    """
+
+    k = determine_sub_triangle(triangle, b)
+    s = np.ones((len(b), 1))
+
+
+def coefficients_quadratic(k):
+    """
+    Returns the indices of quadratic coefficients corresponding to non-zero S-splines on a set of
+    sub-triangles k.
+    :param k: array of indices
+    :return: array of coefficient indices
+    """
+
+    c2 = np.array([
+        [0, 1, 2, 9, 10, 11], [0, 1, 2, 3, 10, 11], [1, 2, 3, 4, 5, 6],
+        [2, 3, 4, 5, 6, 7], [5, 6, 7, 8, 9, 10], [6, 7, 8, 9, 10, 11],
+        [1, 2, 6, 9, 10, 11], [1, 2, 3, 6, 10, 11], [1, 2, 3, 5, 6, 10],
+        [2, 3, 5, 6, 7, 10], [2, 5, 6, 7, 9, 10], [2, 6, 7, 9, 10, 11]
+    ], dtype=np.int)
+    return c2[k]
+
+
+def coefficients_linear(k):
+    """
+    Returns the indices of linear coefficients corresponding to non-zero S-splines on a set of
+    sub-triangles k
+    """
+    c1 = np.array([
+        [0, 5, 6], [0, 3, 6], [1, 3, 7],
+        [1, 4, 7], [2, 4, 8], [2, 5, 8],
+        [5, 6, 9], [3, 6, 9], [3, 7, 9],
+        [4, 7, 9], [4, 8, 9], [5, 8, 9]
+    ], dtype=int)
+
+    return c1[k]
