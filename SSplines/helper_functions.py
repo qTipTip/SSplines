@@ -11,8 +11,8 @@ def barycentric_coordinates(triangle, points, tol=1.0E-15):
     """
 
     p = np.atleast_2d(points) # make sure the points are shaped properly
-    A = np.concatenate((triangle, np.ones(3)), axis=0) # append a row of ones
-    b = np.concatenate((points, np.ones(len(points), 1)), axis=1) # append a column of ones
+    A = np.concatenate((triangle, np.ones((3, 1))), axis=1).T # append a column of ones
+    b = np.concatenate((p, np.ones((len(p), 1))), axis=1) # append a column of ones
 
     x = np.linalg.solve(A[None, :, :], b) # broadcast A to solve all systems at once
 
