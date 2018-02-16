@@ -103,3 +103,27 @@ def r2_single(B):
     R[9, :] = [0, 1, -g[2], 0, 0, 0, -g[0], 0, 0, 0, 0, -g[1]]
 
     return R
+
+
+def r1(B):
+    """
+    Computes R1 matrices for a series of barycentric coordinates.
+    :param B: barycentric coordiantes
+    :return: (len(B), 12, 10) array of matrices
+    """
+    R = np.empty((len(B), 12, 10))
+    for i, b in enumerate(B):
+        R[i] = r1_single(B)
+    return R
+
+
+def r2(B):
+    """
+    Computes R2 matrices for a series of barycentric coordinates.
+    :param B: barycentric coordiantes
+    :return: (len(B), 12, 10) array of matrices
+    """
+    R = np.empty((len(B), 12, 10))
+    for i, b in enumerate(B):
+        R[i] = r2_single(B)
+    return R
