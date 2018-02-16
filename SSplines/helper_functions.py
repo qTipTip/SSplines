@@ -7,7 +7,7 @@ def barycentric_coordinates(triangle, points, tol=1.0E-15):
     :param triangle: vertices of the triangle
     :param points: a set of points
     :param tol: a tolerance for round off error
-    :return: a set of barycentric coordinates
+    :return: a set of barycentric coordinates, ndarray of ndim = 2.
     """
 
     p = np.atleast_2d(points) # make sure the points are shaped properly
