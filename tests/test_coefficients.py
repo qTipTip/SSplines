@@ -90,7 +90,7 @@ def test_coefficients_quadratic_multiple():
     np.testing.assert_almost_equal(computed, expected)
 
 
-def test_coefficients_linear_single():
+def test_coefficients_quadratic_single():
     vertices = np.array([
         [0, 0],
         [1, 0],
