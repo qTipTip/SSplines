@@ -170,6 +170,32 @@ def coefficients_linear(k):
         [1, 4, 7], [2, 4, 8], [2, 5, 8],
         [5, 6, 9], [3, 6, 9], [3, 7, 9],
         [4, 7, 9], [4, 8, 9], [5, 8, 9]
-    ], dtype=int)
+    ], dtype=np.int)
 
     return c1[k]
+
+
+def sub_matrix(matrix, d, k):
+    """
+    Gets the sub-matrix used in evaluation over sub-triangle k for the S-spline matrix or matrices of degree d.
+    :param matrix: S-spline matri(x/ces) of degree 1 or 2. Note, len(matrix) has to equal(len(k))
+    :param d: degree 1 or 2
+    :param k: sub triangle(s)
+    :return: (1x3) or (3x6) sub-matrix for d = 1, d = 2 respectively.
+    """
+
+    c1, c2 = coefficients_linear, coefficients_quadratic
+    n = len(matrix)
+    if d == 1:
+        s = np.zeros((n, 1, 3))
+        c = c1(k)
+        for i in range(n):
+            s[i] = matrix[i, k[i], c[i]]
+        return s
+    elif d == 2:
+        s = np.zeros((n, 3, 6))
+        cl = c1(k)
+        cq = c2(k)
+        for i in range(n):
+            s[i] = matrix[np.ix_([i], cl[i], cq[i])]
+        return s
