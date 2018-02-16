@@ -108,7 +108,7 @@ def r2_single(B):
 def r1(B):
     """
     Computes R1 matrices for a series of barycentric coordinates.
-    :param B: barycentric coordiantes
+    :param B: barycentric coordinates
     :return: (len(B), 12, 10) array of matrices
     """
     R = np.empty((len(B), 12, 10))
@@ -120,7 +120,7 @@ def r1(B):
 def r2(B):
     """
     Computes R2 matrices for a series of barycentric coordinates.
-    :param B: barycentric coordiantes
+    :param B: barycentric coordinates
     :return: (len(B), 12, 10) array of matrices
     """
     R = np.empty((len(B), 12, 10))
