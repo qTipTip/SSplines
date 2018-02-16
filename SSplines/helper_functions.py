@@ -44,8 +44,9 @@ def determine_sub_triangle(triangle, bary_coords):
     :param bary_coords: barycentric coordinates of one or several points
     :return: the integer k for one or several points
     """
-
     index_lookup_table = {38: 0, 46: 0, 39: 1, 19: 2, 17: 3, 8: 4, 25: 4, 12: 5, 6: 6, 7: 7, 3: 8, 1: 9, 0: 10, 4: 11}
-    b1, b2, b3 = bary_coords[:, :]
+
+    b = np.atleast_2d(bary_coords)
+    b1, b2, b3 = b[:, 0], b[:, 1], b[:, 2]
     s = 32 * (b1 > 0.5) + 16 * (b2 >= 0.5) + 8 * (b3 >= 0.5) + 4 * (b1 > b2) + 2 * (b1 > b3) + (b2 >= b3)
-    return np.vectorize(index_lookup_table.get)(s)
+    return np.vectorize(index_lookup_table.get)(s).astype(np.int)
