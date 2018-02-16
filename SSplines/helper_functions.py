@@ -77,3 +77,29 @@ def r1_single(B):
     R[:, 9] = [0, 0, 0, 0, 0, 0, -3 * g[0], -3 * g[0], -3 * g[1], -3 * g[1], -3 * g[2], -3 * g[2]]
 
     return R
+
+
+def r2_single(B):
+    """
+    Computes the quadratic evaluation matrix for Splines on the Powell-Sabin
+    12-split of the triangle delineated by given vertices, evaluated at x.
+    :param B: barycentric coordinates of point of evaluation
+    :return: (10x12) quadratic evaluation matrix.
+    """
+
+    R = np.zeros((10, 12))
+    g = 2 * B - 1  # gamma
+    b = B[:, None] - B[None, :]  # beta
+
+    R[0, :] = [g[0], 2 * B[1], 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 * B[2]]
+    R[1, 3:6] = [2 * B[0], g[1], 2 * B[2]]
+    R[2, 7:10] = [2 * B[1], g[2], 2 * B[0]]
+    R[3, 1:4] = [b[0, 2], 3 * B[2], b[1, 2]]
+    R[4, 5:8] = [b[1, 0], 3 * B[0], b[2, 0]]
+    R[5, 9:12] = [b[2, 1], 3 * B[1], b[0, 1]]
+    R[6, :] = [0, 0.5 * b[0, 2], 1.5 * B[1], 0, 0, 0, 0, 0, 0, 0, 1.5 * B[2], 0.5 * b[0, 1]]
+    R[7, :] = [0, 0, 1.5 * B[0], 0.5 * b[1, 2], 0, 0.5 * b[1, 0], 1.5 * B[2], 0, 0, 0, 0, 0]
+    R[8, :] = [0, 0, 0, 0, 0, 0, 1.5 * B[1], 0.5 * b[2, 0], 0, 0.5 * b[2, 1], 1.5 * B[0], 0]
+    R[9, :] = [0, 1, -g[2], 0, 0, 0, -g[0], 0, 0, 0, 0, -g[1]]
+
+    return R
