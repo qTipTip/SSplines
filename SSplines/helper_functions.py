@@ -50,3 +50,30 @@ def determine_sub_triangle(triangle, bary_coords):
     b1, b2, b3 = b[:, 0], b[:, 1], b[:, 2]
     s = 32 * (b1 > 0.5) + 16 * (b2 >= 0.5) + 8 * (b3 >= 0.5) + 4 * (b1 > b2) + 2 * (b1 > b3) + (b2 >= b3)
     return np.vectorize(index_lookup_table.get)(s).astype(np.int)
+
+
+def r1_single(B):
+    """
+    Computes the linear evaluation matrix for Splines on the Powell-Sabin
+    12-split of the triangle delineated by given vertices, evaluated at x.
+    :param B: barycentric coordinates of point of evaluation
+    :return: (12x10) linear evaluation matrix.
+    """
+
+    R = np.zeros((12, 10))
+    b = B[:, None] - B[None, :]  # beta
+    g = 2 * B - 1
+
+    R[0:2, 0] = g[0]
+    R[2:4, 1] = g[1]
+    R[4:6, 2] = g[2]
+
+    R[:, 3] = [0, 2 * b[1, 2], 2 * b[0, 2], 0, 0, 0, 0, 2 * b[1, 2], 2 * b[0, 2], 0, 0]
+    R[:, 4] = [0, 0, 0, 2 * b[2, 0], 2 * b[1, 0], 0, 0, 0, 0, 2 * b[2, 0], 2 * b[1, 0], 0]
+    R[:, 5] = [2 * b[2, 1], 0, 0, 0, 0, 2 * b[0, 1], 2 * b[2, 1], 0, 0, 0, 0, 2 * b[0, 1]]
+    R[:, 6] = [4 * B[1], 4 * B[2], 0, 0, 0, 0, 4 * b[0, 2], 4 * b[0, 1], 0, 0, 0, 0]
+    R[:, 7] = [0, 0, 4 * B[2], 4 * B[0], 0, 0, 0, 0, 4 * b[1, 0], 4 * b[1, 2], 0, 0]
+    R[:, 8] = [0, 0, 0, 0, 4 * B[0], 4 * B[1], 0, 0, 0, 0, 4 * b[2, 1], 4 * b[2, 0]]
+    R[:, 9] = [0, 0, 0, 0, 0, 0, -3 * g[0], -3 * g[0], -3 * g[1], -3 * g[1], -3 * g[2], -3 * g[2]]
+
+    return R
