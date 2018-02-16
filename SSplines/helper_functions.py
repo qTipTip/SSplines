@@ -24,7 +24,7 @@ def directional_coordinates(triangle, direction):
     """
     Computes the directional coordinates of one or more direction vector(s) with respect to the given triangle.
     :param triangle: vertices of the triangle
-    :param direction: a set of points
+    :param direction: a set of directions.
     :return: a set of directional coordinates, ndarray of ndim = 2.
     """
 
