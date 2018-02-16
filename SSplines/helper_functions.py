@@ -34,3 +34,18 @@ def directional_coordinates(triangle, direction):
 
     a = np.linalg.solve(A[None, :, :], b)  # broadcast A to solve all systems at once
     return a
+
+
+def determine_sub_triangle(triangle, bary_coords):
+    """
+    Determines the integer(s) k such that the point(s) lies in sub-triangle(k) of the Powell--Sabin 12-split
+    of the given triangle.
+    :param triangle: vertices of triangle
+    :param bary_coords: barycentric coordinates of one or several points
+    :return: the integer k for one or several points
+    """
+
+    index_lookup_table = {38: 0, 46: 0, 39: 1, 19: 2, 17: 3, 8: 4, 25: 4, 12: 5, 6: 6, 7: 7, 3: 8, 1: 9, 0: 10, 4: 11}
+    b1, b2, b3 = bary_coords[:, :]
+    s = 32 * (b1 > 0.5) + 16 * (b2 >= 0.5) + 8 * (b3 >= 0.5) + 4 * (b1 > b2) + 2 * (b1 > b3) + (b2 >= b3)
+    return np.vectorize(index_lookup_table.get)(s)
