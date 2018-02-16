@@ -30,7 +30,7 @@ def directional_coordinates(triangle, direction):
 
     u = np.atleast_2d(direction)  # make sure the directions are shaped properly
     A = np.concatenate((triangle, np.ones((3, 1))), axis=1).T  # append a column of ones
-    b = np.concatenate((u, np.ones((len(u), 1))), axis=1)  # append a column of zeros
+    b = np.concatenate((u, np.zeros((len(u), 1))), axis=1)  # append a column of zeros
 
     a = np.linalg.solve(A[None, :, :], b)  # broadcast A to solve all systems at once
     return a
