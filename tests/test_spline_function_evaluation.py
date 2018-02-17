@@ -16,8 +16,8 @@ def test_spline_function_evaluation_multiple_linear():
         [0, 1]
     ])
 
-    d = 2
-    c = np.ones(12)
+    d = 1
+    c = np.ones(10)
     f = SplineFunction(coefficients=c, degree=d, triangle=triangle)
 
     points = sample_triangle(triangle, 30)
