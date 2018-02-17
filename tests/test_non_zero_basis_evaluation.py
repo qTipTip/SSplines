@@ -1,6 +1,7 @@
 import numpy as np
 
-from SSplines.helper_functions import sample_triangle, barycentric_coordinates, evaluate_non_zero_basis_splines
+from SSplines.helper_functions import sample_triangle, barycentric_coordinates, evaluate_non_zero_basis_splines, \
+    determine_sub_triangle
 
 
 def test_non_zero_splines_evaluation_multiple_quadratic():
@@ -19,8 +20,8 @@ def test_non_zero_splines_evaluation_multiple_quadratic():
 
     points = sample_triangle(triangle, 30)
     bary_coords = barycentric_coordinates(triangle, points)
-
-    s = evaluate_non_zero_basis_splines(triangle, d, bary_coords)
+    k = determine_sub_triangle(bary_coords)
+    s = evaluate_non_zero_basis_splines(d, bary_coords, k)
 
     expected_sum = np.ones((len(points)))
     computed_sum = s.sum(axis=1)
@@ -44,9 +45,9 @@ def test_non_zero_splines_evaluation_multiple_linear():
 
     points = sample_triangle(triangle, 30)
     bary_coords = barycentric_coordinates(triangle, points)
+    k = determine_sub_triangle(bary_coords)
 
-    s = evaluate_non_zero_basis_splines(triangle, d, bary_coords)
-
+    s = evaluate_non_zero_basis_splines(d, bary_coords, k)
     expected_sum = np.ones((len(points)))
     computed_sum = s.sum(axis=1)
 

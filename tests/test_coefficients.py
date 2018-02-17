@@ -19,7 +19,7 @@ def test_coefficients_linear_multiple():
     ])
 
     b = barycentric_coordinates(vertices, points)
-    k = determine_sub_triangle(vertices, b)
+    k = determine_sub_triangle(b)
 
     expected = np.array([
         [0, 5, 6],
@@ -48,7 +48,7 @@ def test_coefficients_linear_single():
     ])
 
     b = barycentric_coordinates(vertices, points)
-    k = determine_sub_triangle(vertices, b)
+    k = determine_sub_triangle(b)
 
     expected = np.array([
         [0, 5, 6],
@@ -77,7 +77,7 @@ def test_coefficients_quadratic_multiple():
     ])
 
     b = barycentric_coordinates(vertices, points)
-    k = determine_sub_triangle(vertices, b)
+    k = determine_sub_triangle(b)
 
     expected = np.array([
         [0, 1, 2, 9, 10, 11],
@@ -105,7 +105,7 @@ def test_coefficients_quadratic_single():
     ])
 
     b = barycentric_coordinates(vertices, points)
-    k = determine_sub_triangle(vertices, b)
+    k = determine_sub_triangle(b)
 
     expected = np.array([
         [0, 1, 2, 9, 10, 11],

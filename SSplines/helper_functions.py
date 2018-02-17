@@ -36,11 +36,10 @@ def directional_coordinates(triangle, direction):
     return a
 
 
-def determine_sub_triangle(triangle, bary_coords):
+def determine_sub_triangle(bary_coords):
     """
     Determines the integer(s) k such that the point(s) lies in sub-triangle(k) of the Powell--Sabin 12-split
     of the given triangle.
-    :param triangle: vertices of triangle
     :param bary_coords: barycentric coordinates of one or several points
     :return: the integer k for one or several points
     """
@@ -129,17 +128,17 @@ def r2(B):
     return R
 
 
-def evaluate_non_zero_basis_splines(triangle, d, b):
+def evaluate_non_zero_basis_splines(d, b, k):
     """
     Evaluates the non-zero basis splines of degree d over a set of point(s) represented by its barycentric coordinates
     over the PS12 split of a triangle.
     :param triangle: vertices of triangle
     :param d: degree of spline
     :param b: barycentric coordinates
+    :param k: a list of sub-triangles corresponding to each barycentric coordinate given.
     :return: array, ndarray of non-zero basis splines evaluated at x.
     """
 
-    k = determine_sub_triangle(triangle, b)
     s = np.ones((len(b), 1))
 
     matrices = [r1, r2]
