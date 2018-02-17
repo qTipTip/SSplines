@@ -17,7 +17,7 @@ def test_non_zero_splines_evaluation_multiple():
 
     d = 2
 
-    points = sample_triangle(triangle, 3)
+    points = sample_triangle(triangle, 30)
     bary_coords = barycentric_coordinates(triangle, points)
 
     s = evaluate_non_zero_basis_splines(triangle, d, bary_coords)
