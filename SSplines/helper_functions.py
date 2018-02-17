@@ -104,6 +104,30 @@ def r2_single(B):
     return R
 
 
+def u1_single(A):
+    """
+    Computes the linear derivative matrix for Splines on the Powell-Sabin
+    12-split of the triangle delineated by given vertices in the direction u.
+    :param A: directional coordinates w.r.t some triangle
+    :return: (12x10) linear derivative matrix.
+    """
+
+    U = np.zeros((12, 10))
+    a = A[:, None] - A[None, :]
+
+    U[0:2, 0] = [2 * A[0], 2 * A[0]]
+    U[2:4, 1] = [2 * A[1], 2 * A[1]]
+    U[4:6, 2] = [2 * A[2], 2 * A[2]]
+    U[:, 3] = [0, 2 * a[1, 2], 2 * a[0, 2], 0, 0, 0, 0, 2 * a[1, 2], 2 * a[0, 2], 0, 0]
+    U[:, 4] = [0, 0, 0, 2 * a[2, 0], 2 * a[1, 0], 0, 0, 0, 0, 2 * a[2, 0], 2 * a[1, 0], 0]
+    U[:, 5] = [2 * a[2, 1], 0, 0, 0, 0, 2 * a[0, 1], 2 * a[2, 1], 0, 0, 0, 0, 2 * a[0, 1]]
+    U[:, 6] = [4 * A[1], 4 * A[2], 0, 0, 0, 0, 4 * a[0, 2], 4 * a[0, 1], 0, 0, 0, 0]
+    U[:, 7] = [0, 0, 4 * A[2], 4 * A[0], 0, 0, 0, 0, 4 * a[1, 0], 4 * a[1, 2], 0, 0]
+    U[:, 8] = [0, 0, 0, 0, 4 * A[0], 4 * A[1], 0, 0, 0, 0, 4 * a[2, 1], 4 * a[2, 0]]
+    U[:, 9] = [-6 * A[0], -6 * A[0], -6 * A[1], -6 * A[1], -6 * A[2], -6 * A[2]]
+
+    return U
+
 def r1(B):
     """
     Computes R1 matrices for a series of barycentric coordinates.
@@ -127,6 +151,17 @@ def r2(B):
         R[i] = r2_single(b)
     return R
 
+
+def u1(A):
+    """
+    Computes U1 matrices for a series of directional coordinates.
+    :param A: barycentric coordinates
+    :return: (len(A), 12, 10) array of matrices
+    """
+    U = np.empty((len(A), 12, 10))
+    for i, a in enumerate(A):
+        U[i] = r1_single(a)
+    return U
 
 def evaluate_non_zero_basis_splines(d, b, k):
     """
