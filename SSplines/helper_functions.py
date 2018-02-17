@@ -199,3 +199,31 @@ def sub_matrix(matrix, d, k):
         for i in range(n):
             s[i] = matrix[np.ix_([i], cl[i], cq[i])]
         return s
+
+
+def sample_triangle(triangle, d, ret_number=False):
+    """
+    Returns a set of uniformly spaced points in the triangle. The number of points correspond to the dimension
+    of the space of bi-variate polynomials of degree d.
+    :param np.ndarray triangle: vertices of triangle
+    :param int d: `degree`
+    :param boolean ret_number: whether to return the number of points or not
+    :return np.ndarray: sampled points
+    """
+
+    p1, p2, p3 = triangle
+    n = int((1 / 2) * (d + 1) * (d + 2))  # total number of domain points
+    points = np.zeros((n, 2), dtype=np.float64)
+
+    m = 0
+    for i in range(d + 1):
+        for j in range(d - i + 1):
+            k = (d - i - j)
+            p = (i * p1 + j * p2 + k * p3) / d
+            points[m] = p
+            m += 1
+
+    if ret_number:
+        return points, n
+
+    return points
