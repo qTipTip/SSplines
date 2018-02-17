@@ -196,7 +196,7 @@ def u2(A):
     :param A: barycentric coordinates
     :return: (len(A), 12, 10) array of matrices
     """
-    U = np.empty((len(A), 12, 10))
+    U = np.empty((len(A), 10, 12))
     for i, a in enumerate(A):
         U[i] = r2_single(a)
     return U
@@ -206,7 +206,6 @@ def evaluate_non_zero_basis_splines(d, b, k):
     """
     Evaluates the non-zero basis splines of degree d over a set of point(s) represented by its barycentric coordinates
     over the PS12 split of a triangle.
-    :param triangle: vertices of triangle
     :param d: degree of spline
     :param b: barycentric coordinates
     :param k: a list of sub-triangles corresponding to each barycentric coordinate given.
@@ -220,6 +219,33 @@ def evaluate_non_zero_basis_splines(d, b, k):
     for i in range(d):
         sub = sub_matrix(R[i], i + 1, k)  # extract sub matrices used for evaluation
         s = np.einsum('...ij,...jk->...ik', np.atleast_3d(s), sub)  # compute a broadcast dot product
+    return np.squeeze(s)  # squeeze to remove redundant dimension
+
+
+def evaluate_non_zero_basis_derivatives(d, r, b, a, k):
+    """
+    Evaluates the r'th directional derivative of the non-zero basis splines of degree d at point x
+    over the Powell-Sabin 12 split of the given triangle.
+    :param d: spline degree
+    :param r: order of derivative
+    :param b: barycentric coordinates
+    :param a: directional coordinates for which to differentiate
+    :param k: sub-triangle(s)
+    :return: array of non-zero directional derivatives evaluated at x
+    """
+    s = np.ones((len(b), 1))
+    r_matrices = [r1, r2]
+    u_matrices = [u1, u2]
+    R = [r_matrices[i](b) for i in range(d)]
+    U = [u_matrices[i](a) for i in range(d)]
+
+    for i in range(d - r):
+        r_sub = sub_matrix(R[i], i + 1, k)
+        s = np.einsum('...ij,...jk->...ik', np.atleast_3d(s), r_sub)  # compute a broadcast dot product
+
+    for j, i in enumerate(range(d - r, d)):
+        u_sub = sub_matrix(U[i], i + 1, k)
+        s = np.einsum('...ij,...jk->...ik', np.atleast_3d(s), u_sub)
     return np.squeeze(s)  # squeeze to remove redundant dimension
 
 
