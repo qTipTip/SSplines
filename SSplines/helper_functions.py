@@ -128,6 +128,32 @@ def u1_single(A):
 
     return U
 
+
+def u2_single(A):
+    """
+    Computes the quadratic derivative matrix for Splines on the Powell-Sabin
+    12-split of the triangle delineated by given vertices in the direction u.
+    :param A: directional coordinates wrt to triangle
+    :return: (12x10) quadratic derivative matrix.
+    """
+
+    U = np.zeros((10, 12))
+    a = A[:, None] - A[None, :]
+
+    U[0, :] = [2 * A[0], 2 * A[1], 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 * A[2]]
+    U[1, 3:6] = [2 * A[0], 2 * A[1], 2 * A[2]]
+    U[2, 7:10] = [2 * A[1], 2 * A[2], 2 * A[0]]
+    U[3, 1:4] = [a[0, 2], 3 * A[2], a[1, 2]]
+    U[4, 5:8] = [a[1, 0], 3 * A[0], a[2, 0]]
+    U[5, 9:] = [a[2, 1], 3 * A[1], a[0, 1]]
+    U[6, :] = [0, 0.5 * a[0, 2], 1.5 * A[1], 0, 0, 0, 0, 0, 0, 0, 1.5 * A[2], 0.5 * a[0, 1]]
+    U[7, :] = [0, 0, 1.5 * A[0], 0.5 * a[1, 2], 0, 0.5 * a[1, 0], 1.5 * A[2], 0, 0, 0, 0, 0]
+    U[8, :] = [0, 0, 0, 0, 0, 0, 1.5 * A[1], 0.5 * a[2, 0], 0, 0.5 * a[2, 1], 1.5 * A[0], 0]
+    U[9, :] = [0, 0, -2 * A[2], 0, 0, 0, -2 * A[0], 0, 0, 0, -2 * A[1], 0]
+
+    return U
+
+
 def r1(B):
     """
     Computes R1 matrices for a series of barycentric coordinates.
@@ -155,13 +181,26 @@ def r2(B):
 def u1(A):
     """
     Computes U1 matrices for a series of directional coordinates.
-    :param A: barycentric coordinates
+    :param A: directional coordinates
     :return: (len(A), 12, 10) array of matrices
     """
     U = np.empty((len(A), 12, 10))
     for i, a in enumerate(A):
         U[i] = r1_single(a)
     return U
+
+
+def u2(A):
+    """
+    Computes U2 matrices for a series of directional coordinates.
+    :param A: barycentric coordinates
+    :return: (len(A), 12, 10) array of matrices
+    """
+    U = np.empty((len(A), 12, 10))
+    for i, a in enumerate(A):
+        U[i] = r2_single(a)
+    return U
+
 
 def evaluate_non_zero_basis_splines(d, b, k):
     """
