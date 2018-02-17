@@ -68,7 +68,7 @@ def r1_single(B):
     R[2:4, 1] = g[1]
     R[4:6, 2] = g[2]
 
-    R[:, 3] = [0, 2 * b[1, 2], 2 * b[0, 2], 0, 0, 0, 0, 2 * b[1, 2], 2 * b[0, 2], 0, 0]
+    R[:, 3] = [0, 2 * b[1, 2], 2 * b[0, 2], 0, 0, 0, 0, 2 * b[1, 2], 2 * b[0, 2], 0, 0, 0]
     R[:, 4] = [0, 0, 0, 2 * b[2, 0], 2 * b[1, 0], 0, 0, 0, 0, 2 * b[2, 0], 2 * b[1, 0], 0]
     R[:, 5] = [2 * b[2, 1], 0, 0, 0, 0, 2 * b[0, 1], 2 * b[2, 1], 0, 0, 0, 0, 2 * b[0, 1]]
     R[:, 6] = [4 * B[1], 4 * B[2], 0, 0, 0, 0, 4 * b[0, 2], 4 * b[0, 1], 0, 0, 0, 0]
@@ -96,11 +96,11 @@ def r2_single(B):
     R[2, 7:10] = [2 * B[1], g[2], 2 * B[0]]
     R[3, 1:4] = [b[0, 2], 3 * B[2], b[1, 2]]
     R[4, 5:8] = [b[1, 0], 3 * B[0], b[2, 0]]
-    R[5, 9:12] = [b[2, 1], 3 * B[1], b[0, 1]]
+    R[5, 9:] = [b[2, 1], 3 * B[1], b[0, 1]]
     R[6, :] = [0, 0.5 * b[0, 2], 1.5 * B[1], 0, 0, 0, 0, 0, 0, 0, 1.5 * B[2], 0.5 * b[0, 1]]
     R[7, :] = [0, 0, 1.5 * B[0], 0.5 * b[1, 2], 0, 0.5 * b[1, 0], 1.5 * B[2], 0, 0, 0, 0, 0]
     R[8, :] = [0, 0, 0, 0, 0, 0, 1.5 * B[1], 0.5 * b[2, 0], 0, 0.5 * b[2, 1], 1.5 * B[0], 0]
-    R[9, :] = [0, 1, -g[2], 0, 0, 0, -g[0], 0, 0, 0, 0, -g[1]]
+    R[9, :] = [0, 0, -g[2], 0, 0, 0, -g[0], 0, 0, 0, -g[1], 0]
 
     return R
 
@@ -113,7 +113,7 @@ def r1(B):
     """
     R = np.empty((len(B), 12, 10))
     for i, b in enumerate(B):
-        R[i] = r1_single(B)
+        R[i] = r1_single(b)
     return R
 
 
@@ -123,9 +123,9 @@ def r2(B):
     :param B: barycentric coordinates
     :return: (len(B), 12, 10) array of matrices
     """
-    R = np.empty((len(B), 12, 10))
+    R = np.empty((len(B), 10, 12))
     for i, b in enumerate(B):
-        R[i] = r2_single(B)
+        R[i] = r2_single(b)
     return R
 
 
@@ -141,6 +141,13 @@ def evaluate_non_zero_basis_splines(triangle, d, b):
 
     k = determine_sub_triangle(triangle, b)
     s = np.ones((len(b), 1))
+
+    matrices = [r1, r2]
+    R = [matrices[i](b) for i in range(d)]
+    for i in range(d):
+        sub = sub_matrix(R[i], i + 1, k)  # extract sub matrices used for evaluation
+        s = np.einsum('...ij,...jk->...ik', np.atleast_3d(s), sub)  # compute a broadcast dot product
+    return np.squeeze(s)  # squeeze to remove redundant dimension
 
 
 def coefficients_quadratic(k):
@@ -209,6 +216,8 @@ def sample_triangle(triangle, d, ret_number=False):
     :param int d: `degree`
     :param boolean ret_number: whether to return the number of points or not
     :return np.ndarray: sampled points
+
+    TODO / IDEA: Instead of returning the points, return the barycentric coordinates (i/d, j/d, k/d).
     """
 
     p1, p2, p3 = triangle
