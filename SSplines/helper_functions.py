@@ -311,10 +311,10 @@ def sample_triangle(triangle, d, ret_number=False):
     """
     Returns a set of uniformly spaced points in the triangle. The number of points correspond to the dimension
     of the space of bi-variate polynomials of degree d.
-    :param np.ndarray triangle: vertices of triangle
-    :param int d: `degree`
-    :param boolean ret_number: whether to return the number of points or not
-    :return np.ndarray: sampled points
+    :param triangle: vertices of triangle
+    :param d: sample (1/2)(d+1)(d+2) points
+    :param ret_number: whether to return the number of points or not
+    :return: sampled points
 
     TODO / IDEA: Instead of returning the points, return the barycentric coordinates (i/d, j/d, k/d).
     """
@@ -335,3 +335,16 @@ def sample_triangle(triangle, d, ret_number=False):
         return points, n
 
     return points
+
+
+def signed_area(triangle):
+    """
+    Computes the signed area of a triangle
+    :param triangle: vertices of triangle
+    :return: the signed area of the triangle
+    """
+
+    u = triangle[1, :] - triangle[0, :]
+    v = triangle[2, :] - triangle[0, :]
+
+    return 0.5 * np.linalg.det(np.array((u, v)))
