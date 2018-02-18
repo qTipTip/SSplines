@@ -4,6 +4,9 @@ from SSplines.helper_functions import coefficients_linear, coefficients_quadrati
     determine_sub_triangle, evaluate_non_zero_basis_splines, evaluate_non_zero_basis_derivatives, \
     directional_coordinates
 
+UX = np.array([1, 0])
+UY = np.array([0, 1])
+
 
 class SplineFunction(object):
     """
@@ -58,3 +61,68 @@ class SplineFunction(object):
         c = self._non_zero_coefficients(k)
 
         return np.einsum('...i,...i->...', z, c)  # broadcast the dot product to compute all values at once.
+
+    def dx(self, x):
+        """
+        Short hand notation for derivative w.r.t x.
+        :param x: set of points
+        :return: df(x)/dx
+        """
+
+        return self.D(x, UX, 1)
+
+    def dy(self, x):
+        """
+        Short hand notation for derivative w.r.t y.
+        :param x: set of points
+        :return: df(x)/dy
+        """
+
+        return self.D(x, UY, 1)
+
+    def div(self, x):
+        """
+        Short hand notation for the divergence.
+        :param x: set of points
+        :return: div f
+        """
+
+        return self.dx(x) + self.dy(x)
+
+    def grad(self, x):
+        """
+        Short hand notation for the gradient.
+        :param x: set of points
+        :return: grad f
+        """
+
+        return np.array([
+            self.dx(x), self.dy(x)
+        ]).T
+
+    def ddx(self, x):
+        """
+        Short hand notation for second derivative w.r.t x.
+        :param x: set of points
+        :return: df(x)/dx
+        """
+
+        return self.D(x, UX, 2)
+
+    def ddy(self, x):
+        """
+        Short hand notation for second derivative w.r.t y.
+        :param x: set of points
+        :return: df(x)/dy
+        """
+
+        return self.D(x, UY, 2)
+
+    def lapl(self, x):
+        """
+        Short hand notation for the laplacian.
+        :param x: set of points
+        :return: lapl f
+        """
+
+        return self.ddx(x) + self.ddy(x)
