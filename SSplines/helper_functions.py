@@ -359,3 +359,55 @@ def projection_length(u, v):
     """
 
     return np.einsum('i,i->', u, v) / np.einsum('i,i->', u, u)
+
+
+def hermite_basis_coefficients(triangle):
+    """
+    Returns the set of twelve coefficient vectors corresponding to a quadratic Hermite nodal basis
+    on the PS12 of given triangle.
+    :param triangle: vertices of triangle
+    :return: (12 x 12) matrix of coefficients, where each column correspond to a basis function.
+    """
+
+    A = np.zeros((12, 12))
+
+    p1, p2, p3 = triangle
+
+    p4 = 0.5 * (p1 + p2)
+    p5 = 0.5 * (p2 + p3)
+    p6 = 0.5 * (p3 + p1)
+
+    l126 = projection_length(p1 - p2, p2 - p6)
+    l134 = projection_length(p1 - p3, p3 - p4)
+    l215 = projection_length(p2 - p1, p1 - p5)
+    l234 = projection_length(p2 - p3, p3 - p4)
+    l326 = projection_length(p3 - p2, p2 - p6)
+    l315 = projection_length(p3 - p1, p1 - p5)
+
+    x21, y21 = p2 - p1
+    x12, y12 = p1 - p2
+    x13, y13 = p1 - p3
+    x31, y31 = p3 - p1
+    x32, y32 = p3 - p2
+    x23, y23 = p2 - p3
+
+    d = signed_area(triangle)
+
+    p12 = 3 * np.linalg.norm(p1 - p2)
+    p23 = 3 * np.linalg.norm(p2 - p3)
+    p31 = 3 * np.linalg.norm(p3 - p1)
+
+    A[:, 0] = [1, 1, -2 / 3 * l126, 0, 0, 0, 0, 0, 0, 0, -2 / 3 * l134, 1]
+    A[:, 1] = [0, 1 / 4 * x21, 1 / 6 * x12 * l126, 0, 0, 0, 0, 0, 0, 0, 1 / 6 * x13 * l134, 1 / 4 * x31]
+    A[:, 2] = [0, 1 / 4 * y21, 1 / 6 * y12 * l126, 0, 0, 0, 0, 0, 0, 0, 1 / 6 * y13 * l134, 1 / 4 * y31]
+    A[:, 3] = [0, 0, d / p12, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    A[:, 4] = [0, 0, -2 / 3 * l215, 1, 1, 1, -2 / 3 * l234, 0, 0, 0, 0, 0]
+    A[:, 5] = [0, 0, 1 / 6 * x21 * l215, 1 / 4 * x12, 0, 1 / 4 * x32, 1 / 6 * x23 * l234, 0, 0, 0, 0, 0]
+    A[:, 6] = [0, 0, 1 / 6 * y21 * l215, 1 / 4 * y12, 0, 1 / 4 * y32, 1 / 6 * y23 * l234, 0, 0, 0, 0, 0]
+    A[:, 7] = [0, 0, 0, 0, 0, 0, d / p23, 0, 0, 0, 0, 0]
+    A[:, 8] = [0, 0, 0, 0, 0, 0, -2 / 3 * l326, 1, 1, 1, -2 / 3 * l315, 0]
+    A[:, 9] = [0, 0, 0, 0, 0, 0, 1 / 6 * x32 * l326, 1 / 4 * x23, 0, 1 / 4 * x13, 1 / 6 * x31 * l315, 0]
+    A[:, 10] = [0, 0, 0, 0, 0, 0, 1 / 6 * y32 * l326, 1 / 4 * y23, 0, 1 / 4 * y13, 1 / 6 * y31 * l315, 0]
+    A[:, 11] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, d / p31, 0]
+
+    return A

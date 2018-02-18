@@ -1,5 +1,6 @@
 import numpy as np
 
+from SSplines.helper_functions import hermite_basis_coefficients
 from SSplines.spline_function import SplineFunction
 
 
@@ -34,3 +35,14 @@ class SplineSpace(object):
         """
         coefficients = np.eye(self.dimension)
         return [self.function(c) for c in coefficients]
+
+    def hermite_basis(self):
+        """
+        Returns a list of 12 Hermite nodal basis functions as callable spline functions.
+        :return list: basis SplineFunction
+        """
+
+        assert self.degree == 2, 'The Hermite basis only exists for degree 2 simplex splines'
+
+        coefficients = hermite_basis_coefficients(self.triangle)
+        return [self.function(c) for c in coefficients.T]
