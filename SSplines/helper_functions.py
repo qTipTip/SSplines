@@ -361,11 +361,13 @@ def projection_length(u, v):
     return np.einsum('i,i->', u, v) / np.einsum('i,i->', u, u)
 
 
-def hermite_basis_coefficients(triangle):
+def hermite_basis_coefficients(triangle, outward_normal_derivative=False):
     """
     Returns the set of twelve coefficient vectors corresponding to a quadratic Hermite nodal basis
     on the PS12 of given triangle.
     :param triangle: vertices of triangle
+    :param outward_normal_derivative: whether to have the normal derivative basis functions use the outward or inward pointing
+    unit normal.
     :return: (12 x 12) matrix of coefficients, where each column correspond to a basis function.
     """
 
@@ -409,5 +411,8 @@ def hermite_basis_coefficients(triangle):
     A[:, 9] = [0, 0, 0, 0, 0, 0, 1 / 6 * x32 * l326, 1 / 4 * x23, 0, 1 / 4 * x13, 1 / 6 * x31 * l315, 0]
     A[:, 10] = [0, 0, 0, 0, 0, 0, 1 / 6 * y32 * l326, 1 / 4 * y23, 0, 1 / 4 * y13, 1 / 6 * y31 * l315, 0]
     A[:, 11] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, d / p31, 0]
+
+    if outward_normal_derivative:
+        A[:, [3, 7, 11]] *= -1
 
     return A

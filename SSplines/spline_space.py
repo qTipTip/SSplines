@@ -36,13 +36,14 @@ class SplineSpace(object):
         coefficients = np.eye(self.dimension)
         return [self.function(c) for c in coefficients]
 
-    def hermite_basis(self):
+    def hermite_basis(self, outward_normal=False):
         """
         Returns a list of 12 Hermite nodal basis functions as callable spline functions.
+        :param outward_normal: whether to use the outward or inward normal vector.
         :return list: basis SplineFunction
         """
 
         assert self.degree == 2, 'The Hermite basis only exists for degree 2 simplex splines'
 
-        coefficients = hermite_basis_coefficients(self.triangle)
+        coefficients = hermite_basis_coefficients(self.triangle, outward_normal_derivative=outward_normal)
         return [self.function(c) for c in coefficients.T]
