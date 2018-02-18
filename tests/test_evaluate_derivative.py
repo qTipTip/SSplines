@@ -29,7 +29,7 @@ def test_derivative_evaluation_along_edge():
 
     n = 1000
     t_values_1 = np.linspace(0, 0.5, n, endpoint=False)
-    t_values_2 = np.linspace(0.5, 1, n, endpoint=True)
+    t_values_2 = np.linspace(0.5, 1, n, endpoint=False)
 
     p1 = np.array([
         t_values_1,
