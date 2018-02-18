@@ -244,7 +244,7 @@ def evaluate_non_zero_basis_derivatives(d, r, b, a, k):
         s = np.einsum('...ij,...jk->...ik', np.atleast_3d(s), r_sub)  # compute a broadcast dot product
 
     for j, i in enumerate(range(d - r, d)):
-        u_sub = sub_matrix(U[i], i + 1, k)
+        u_sub = sub_matrix(np.repeat(U[i], len(k), axis=0), i + 1, k)  # in order to extract sub-matrices properly.
         s = (i + 1) * np.einsum('...ij,...jk->...ik', np.atleast_3d(s), u_sub)
     return np.squeeze(s)  # squeeze to remove redundant dimension
 
