@@ -348,3 +348,14 @@ def signed_area(triangle):
     v = triangle[2, :] - triangle[0, :]
 
     return 0.5 * np.linalg.det(np.array((u, v)))
+
+
+def projection_length(u, v):
+    """
+    Returns the length of the projection of v onto u.
+    :param u: vector
+    :param v: vector
+    :returns: length of projection_u(v)
+    """
+
+    return np.einsum('i,i->', u, v) / np.einsum('i,i->', u, u)
