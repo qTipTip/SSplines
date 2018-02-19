@@ -3,6 +3,7 @@ import numpy as np
 from SSplines.helper_functions import signed_area
 
 
+# noinspection PyTypeChecker
 def test_signed_area_unit_simplex():
     vertices = np.array([
         [0, 0],
@@ -16,6 +17,7 @@ def test_signed_area_unit_simplex():
     np.testing.assert_almost_equal(expected_area, computed_area)
 
 
+# noinspection PyTypeChecker
 def test_signed_area_unit_simplex_reverse_orientation():
     vertices = np.array([
         [0, 0],

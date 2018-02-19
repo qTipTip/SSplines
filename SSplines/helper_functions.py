@@ -10,13 +10,13 @@ def barycentric_coordinates(triangle, points, tol=1.0E-15):
     :return: a set of barycentric coordinates, ndarray of ndim = 2.
     """
 
-    p = np.atleast_2d(points) # make sure the points are shaped properly
-    A = np.concatenate((triangle, np.ones((3, 1))), axis=1).T # append a column of ones
-    b = np.concatenate((p, np.ones((len(p), 1))), axis=1) # append a column of ones
+    p = np.atleast_2d(points)  # make sure the points are shaped properly
+    A = np.concatenate((triangle, np.ones((3, 1))), axis=1).T  # append a column of ones
+    b = np.concatenate((p, np.ones((len(p), 1))), axis=1)  # append a column of ones
 
-    x = np.linalg.solve(A[None, :, :], b) # broadcast A to solve all systems at once
+    x = np.linalg.solve(A[None, :, :], b)  # broadcast A to solve all systems at once
 
-    x[abs(x) < tol] = 0 # remove round off errors around zero
+    x[abs(x) < tol] = 0  # remove round off errors around zero
     return x
 
 
@@ -284,14 +284,14 @@ def coefficients_linear(k):
 def sub_matrix(matrix, d, k):
     """
     Gets the sub-matrix used in evaluation over sub-triangle k for the S-spline matrix or matrices of degree d.
-    :param matrix: S-spline matri(x/ces) of degree 1 or 2. Note, len(matrix) has to equal(len(k))
+    :param matrix: S-spline matrix(ces) of degree 1 or 2. Note, len(matrix) has to equal(len(k))
     :param d: degree 1 or 2
     :param k: sub triangle(s)
     :return: (1x3) or (3x6) sub-matrix for d = 1, d = 2 respectively.
     """
 
     c1, c2 = coefficients_linear, coefficients_quadratic
-    n = len(matrix)
+    n = matrix.shape[0]
     if d == 1:
         s = np.zeros((n, 1, 3))
         c = c1(k)
