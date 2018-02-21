@@ -485,5 +485,4 @@ def gaussian_quadrature(triangle, func, b, w):
     a = abs(signed_area(triangle))
     f = func(p)
 
-    print(f.shape, w.shape)
     return a * (np.dot(w, f))
