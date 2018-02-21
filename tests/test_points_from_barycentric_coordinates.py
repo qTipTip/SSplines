@@ -67,3 +67,40 @@ def test_points_from_barycentric_coordinates_cubic_quadrature_points_arbitrary_t
     computed_points = points_from_barycentric_coordinates(vertices, b)
 
     np.testing.assert_almost_equal(computed_points, expected_points)
+
+
+def test_points_from_barycentric_coordinates_multiple_triangles():
+    vertices = np.array([
+        [0, 0],
+        [2, 0],
+        [2, 1]
+    ])
+
+    triangles = np.array([
+        vertices,
+        vertices
+    ]
+    )
+    b = np.array([
+        [1 / 3, 1 / 3, 1 / 3],
+        [0.13333333, 0.13333333, 0.73333333],
+        [0.73333333, 0.13333333, 0.13333333],
+        [0.13333333, 0.73333333, 0.13333333]
+    ])
+
+    expected_points = np.array([
+        [4 / 3, 1 / 3],
+        [26 / 15, 11 / 15],
+        [8 / 15, 2 / 15],
+        [26 / 15, 2 / 15]
+    ])
+
+    expected_points = np.array([
+        expected_points,
+        expected_points
+    ]
+    )
+    computed_points = points_from_barycentric_coordinates(triangles, b)
+
+    print(expected_points.shape, computed_points.shape)
+    np.testing.assert_almost_equal(computed_points, expected_points)

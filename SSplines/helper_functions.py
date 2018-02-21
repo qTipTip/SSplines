@@ -24,15 +24,15 @@ def barycentric_coordinates(triangle, points, tol=1.0E-15):
 
 def points_from_barycentric_coordinates(triangle, b):
     """
-    Given a triangle and a set of barycentric coordinates, computes the point(s) corresponding to the barycentric coordinates.
-    :param triangle: vertices of triangle
+    Given a triangle(s) and a set of barycentric coordinates, computes the point(s) corresponding to the barycentric coordinates.
+    :param triangle: vertices of triangle, or multiple
     :param b: barycentric coordinates
     :return: points
     """
 
     b = np.atleast_2d(b)
     t = np.atleast_2d(triangle)
-    p = b.dot(t)  # compute a broadcasted dot product
+    p = np.matmul(b, t)  # compute a broadcasted dot product
     return p
 
 
@@ -380,10 +380,14 @@ def signed_area(triangle):
     :return: the signed area of the triangle
     """
 
-    u = triangle[1, :] - triangle[0, :]
-    v = triangle[2, :] - triangle[0, :]
+    if triangle.ndim == 2:  # if only one triangle is supplied, pretend the matrix is 3dim
+        triangle = np.expand_dims(triangle, axis=0)
 
-    return 0.5 * np.linalg.det(np.array((u, v)))
+    u = triangle[:, 1, :] - triangle[:, 0, :]
+    v = triangle[:, 2, :] - triangle[:, 0, :]
+
+    A = np.array((u.T, v.T)).T
+    return 0.5 * np.linalg.det(A)
 
 
 def area(triangle):
@@ -518,3 +522,24 @@ def gaussian_quadrature(triangle, func, b, w):
     f = func(p)
 
     return a * (np.dot(w, f))
+
+
+def gaussian_quadrature_ps12(triangle, func, b, w):
+    """
+    Approximates the integral of f over the PS12-split of triangle, using a quadrature rule with given points and weights.
+    :param triangle: vertices of triangle
+    :param func: function R^2 -> R to integrate
+    :param b: barycentric coordinates of quadrature points
+    :param w: weights of quadrature points
+    :return: numerical integral of f
+    """
+
+    sub_triangle = ps12_sub_triangles(triangle)
+
+    i = 0
+
+    for t in sub_triangle:
+        v = gaussian_quadrature(t, func, b, w)
+
+        i += v
+    return i

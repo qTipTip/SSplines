@@ -42,3 +42,23 @@ def test_signed_area_arbitrary_triangle():
     computed_area = signed_area(vertices)
 
     np.testing.assert_almost_equal(expected_area, computed_area)
+
+
+def test_signed_area_multiple_triangles():
+    vertices = np.array([
+        [
+            [0, 0],
+            [0, 1],
+            [1, 0]
+        ],
+        [
+            [5, 1],
+            [6, 1],
+            [5.5, 1 + np.sqrt(3) / 2]
+        ]
+    ])
+
+    expected_area = np.array([-1 / 2, np.sqrt(3) / 4])
+    computed_area = signed_area(vertices)
+
+    np.testing.assert_almost_equal(expected_area, computed_area)
