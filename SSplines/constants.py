@@ -26,3 +26,6 @@ PS12_SUB_TRIANGLE_VERTICES = np.array([
     [5, 9, 8],
     [5, 6, 9]
 ], dtype=np.int)
+
+UX = np.array([1, 0])
+UY = np.array([0, 1])

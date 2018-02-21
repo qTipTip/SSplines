@@ -1,11 +1,9 @@
 import numpy as np
 
+from SSplines.constants import UY, UX
 from SSplines.helper_functions import coefficients_linear, coefficients_quadratic, barycentric_coordinates, \
     determine_sub_triangle, evaluate_non_zero_basis_splines, evaluate_non_zero_basis_derivatives, \
     directional_coordinates
-
-UX = np.array([1, 0])
-UY = np.array([0, 1])
 
 
 class SplineFunction(object):
