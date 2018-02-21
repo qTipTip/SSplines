@@ -444,7 +444,7 @@ def gaussian_quadrature_data(order):
         b = np.array([
             [1 / 3, 1 / 3, 1 / 3]
         ])
-        w = 1
+        w = np.array([1])
 
     elif order == 2:
 
@@ -459,9 +459,9 @@ def gaussian_quadrature_data(order):
 
         b = np.array([
             [1 / 3, 1 / 3, 1 / 3],
-            [0.13333333, 0.13333333, 0.73333333],
-            [0.73333333, 0.13333333, 0.13333333],
-            [0.13333333, 0.73333333, 0.13333333]
+            [2 / 15, 2 / 15, 11 / 15],
+            [11 / 15, 2 / 15, 2 / 15],
+            [2 / 15, 11 / 15, 2 / 15]
         ])
         w = np.array([-27 / 48, 25 / 48, 25 / 28, 25 / 48])
 
@@ -485,4 +485,5 @@ def gaussian_quadrature(triangle, func, b, w):
     a = abs(signed_area(triangle))
     f = func(p)
 
+    print(f.shape, w.shape)
     return a * (np.dot(w, f))
