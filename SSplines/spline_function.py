@@ -126,3 +126,14 @@ class SplineFunction(object):
         """
 
         return self.ddx(x) + self.ddy(x)
+
+    # MATHEMATICAL OPERATORS
+    # TODO: Check degree and triangle for each of these operations
+
+    def __add__(self, other):
+        """
+        Addition of two SplineFunctions.
+        :param other: Spline Function
+        :return: SplineFunction
+        """
+        return SplineFunction(self.triangle, self.degree, self.coefficients + other.coefficients)
