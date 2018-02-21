@@ -364,6 +364,16 @@ def signed_area(triangle):
     return 0.5 * np.linalg.det(np.array((u, v)))
 
 
+def area(triangle):
+    """
+    Computes the absolute area of a triangle.
+    :param triangle: vertices of triangle
+    :return: absolute area of triangle
+    """
+
+    return np.abs(signed_area(triangle))
+
+
 def projection_length(u, v):
     """
     Returns the length of the projection of v onto u.
