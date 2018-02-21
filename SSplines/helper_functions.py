@@ -84,7 +84,7 @@ def ps12_sub_triangles(triangle):
     :return: vertex triples
     """
 
-    return np.take(ps12_vertices(triangle), PS12_SUB_TRIANGLE_VERTICES)
+    return np.take(ps12_vertices(triangle), PS12_SUB_TRIANGLE_VERTICES, axis=0)
 
 
 def r1_single(B):
