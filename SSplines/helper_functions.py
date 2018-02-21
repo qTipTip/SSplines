@@ -430,3 +430,59 @@ def hermite_basis_coefficients(triangle, outward_normal_derivative=False):
         A[:, [3, 7, 11]] *= -1
 
     return A
+
+
+def gaussian_quadrature_data(order):
+    """
+    Computes weights and barycentric coordinates for Gaussian quadrature of the given order.
+    :param order: order of integration
+    :return: weights and barycentric coordinates
+    """
+
+    if order == 1:
+
+        b = np.array([
+            [1 / 3, 1 / 3, 1 / 3]
+        ])
+        w = 1
+
+    elif order == 2:
+
+        b = np.array([
+            [0.5, 0.5, 0],
+            [0.5, 0, 0.5],
+            [0, 0.5, 0.5]
+        ])
+        w = np.array([1 / 3, 1 / 3, 1 / 3])
+
+    elif order == 3:
+
+        b = np.array([
+            [1 / 3, 1 / 3, 1 / 3],
+            [0.13333333, 0.13333333, 0.73333333],
+            [0.73333333, 0.13333333, 0.13333333],
+            [0.13333333, 0.73333333, 0.13333333]
+        ])
+        w = np.array([-27 / 48, 25 / 48, 25 / 28, 25 / 48])
+
+    else:
+        raise NotImplementedError('Higher order weights are not implemented yet')
+
+    return b, w
+
+
+def gaussian_quadrature(triangle, func, b, w):
+    """
+    Approximates the integral of f over triangle numerically using a quadrature rule with the given points and weights.
+    :param func: function R^2 -> R to integrate
+    :param triangle: vertices of triangle
+    :param b: barycentric coordinates of quadrature points
+    :param w: weights of quadrature points
+    :return: numerical integral of f
+    """
+
+    p = points_from_barycentric_coordinates(triangle, b)
+    a = abs(signed_area(triangle))
+    f = func(p)
+
+    return a * (np.dot(w, f))
