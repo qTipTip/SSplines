@@ -20,6 +20,20 @@ def barycentric_coordinates(triangle, points, tol=1.0E-15):
     return x
 
 
+def points_from_barycentric_coordinates(triangle, b):
+    """
+    Given a triangle and a set of barycentric coordinates, computes the point(s) corresponding to the barycentric coordinates.
+    :param triangle: vertices of triangle
+    :param b: barycentric coordinates
+    :return: points
+    """
+
+    b = np.atleast_2d(b)
+    t = np.atleast_2d(triangle)
+    p = b.dot(t)  # compute a broadcasted dot product
+    return p
+
+
 def directional_coordinates(triangle, direction):
     """
     Computes the directional coordinates of one or more direction vector(s) with respect to the given triangle.
