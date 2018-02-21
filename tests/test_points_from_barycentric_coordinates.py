@@ -10,11 +10,8 @@ def test_points_from_barycentric_coordinates():
         [1, 0],
         [0, 1]
     ])
-
     points = sample_triangle(vertices, 450)
 
     bary_coords = barycentric_coordinates(vertices, points)
-
     points_from_bary_coords = points_from_barycentric_coordinates(vertices, bary_coords)
-
     np.testing.assert_almost_equal(points, points_from_bary_coords)
