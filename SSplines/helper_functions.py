@@ -1,5 +1,7 @@
 import numpy as np
 
+from .constants import PS12_BARYCENTRIC_COORDINATES
+
 
 def barycentric_coordinates(triangle, points, tol=1.0E-15):
     """
@@ -63,6 +65,16 @@ def determine_sub_triangle(bary_coords):
     b1, b2, b3 = b[:, 0], b[:, 1], b[:, 2]
     s = 32 * (b1 > 0.5) + 16 * (b2 >= 0.5) + 8 * (b3 >= 0.5) + 4 * (b1 > b2) + 2 * (b1 > b3) + (b2 >= b3)
     return np.vectorize(index_lookup_table.get)(s).astype(np.int)
+
+
+def ps12_vertices(triangle):
+    """
+    Returns the set of ten vertices in the Powell--Sabin 12-split.
+    :param triangle: vertices of triangle
+    :return: set of vertices in 12-split
+    """
+
+    return points_from_barycentric_coordinates(triangle, PS12_BARYCENTRIC_COORDINATES)
 
 
 def r1_single(B):
