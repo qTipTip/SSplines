@@ -137,3 +137,11 @@ class SplineFunction(object):
         :return: SplineFunction
         """
         return SplineFunction(self.triangle, self.degree, self.coefficients + other.coefficients)
+
+    def __mul__(self, scalar):
+        """
+        Scalar multiplication of SplineFunction.
+        :param scalar: real number
+        :return: SplineFunction
+        """
+        return SplineFunction(self.triangle, self.degree, scalar * self.coefficients)
