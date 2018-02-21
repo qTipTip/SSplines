@@ -1,6 +1,6 @@
 import numpy as np
 
-from .constants import PS12_BARYCENTRIC_COORDINATES
+from .constants import PS12_BARYCENTRIC_COORDINATES, PS12_SUB_TRIANGLE_VERTICES
 
 
 def barycentric_coordinates(triangle, points, tol=1.0E-15):
@@ -75,6 +75,16 @@ def ps12_vertices(triangle):
     """
 
     return points_from_barycentric_coordinates(triangle, PS12_BARYCENTRIC_COORDINATES)
+
+
+def ps12_sub_triangles(triangle):
+    """
+    Returns a set of vertex triples corresponding to the 12 sub-triangles in the ps12.
+    :param triangle: triangle
+    :return: vertex triples
+    """
+
+    return np.take(ps12_vertices(triangle), PS12_SUB_TRIANGLE_VERTICES)
 
 
 def r1_single(B):
