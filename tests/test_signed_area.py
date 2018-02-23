@@ -1,6 +1,6 @@
 import numpy as np
 
-from SSplines.helper_functions import signed_area
+from SSplines.helper_functions import signed_area, ps12_sub_triangles
 
 
 # noinspection PyTypeChecker
@@ -62,3 +62,26 @@ def test_signed_area_multiple_triangles():
     computed_area = signed_area(vertices)
 
     np.testing.assert_almost_equal(expected_area, computed_area)
+
+
+def test_signed_area_powell_sabin():
+    """
+    Test that computing the area of the whole triangle, or computing the area over the split
+    and adding the areas together, yields the same result.
+    """
+
+    triangle = np.array([
+        [0, 0],
+        [1, 0],
+        [0, 1]
+    ])
+
+    sub_triangles = ps12_sub_triangles(triangle)
+
+    expected_area = 1 / 2
+    computed_area = signed_area(triangle)
+    computed_area_split = np.sum(signed_area(sub_triangles))
+
+    np.testing.assert_almost_equal(computed_area, expected_area)
+    np.testing.assert_almost_equal(computed_area_split, expected_area)
+    np.testing.assert_almost_equal(computed_area, computed_area_split)
