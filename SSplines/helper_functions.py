@@ -519,6 +519,30 @@ def gaussian_quadrature_data(order):
         ])
         w = np.array([-27 / 48, 25 / 48, 25 / 28, 25 / 48])
 
+    elif order == 4:
+        # http://www.cs.rpi.edu/~flaherje/pdf/fea6.pdf
+        W1 = 0.109951743655322
+        W2 = 0.223381589678011
+
+        b11 = 0.816847572980459
+        b12 = 0.091576213509771
+
+        b21 = 0.108103018168070
+        b22 = 0.445948490915965
+
+        b = np.array([
+            [b11, b12, b12],
+            [b12, b11, b12],
+            [b12, b12, b11],
+            [b21, b22, b22],
+            [b22, b21, b22],
+            [b22, b22, b21]
+        ])
+
+        w = np.array([
+            W1, W1, W1, W2, W2, W2
+        ])
+
     else:
         raise NotImplementedError('Higher order weights are not implemented yet')
 
