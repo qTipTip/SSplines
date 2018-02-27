@@ -1,8 +1,7 @@
 import numpy as np
-from sympy import symbols, simplify
-
 from SSplines.constants import KNOT_MULTIPLICITIES_QUADRATIC
 from SSplines.symbolic import polynomial_pieces
+from sympy import symbols, simplify
 
 
 def test_polynomial_pieces_quadratic_basis():
@@ -16,10 +15,9 @@ def test_polynomial_pieces_quadratic_basis():
     # knot multiplicities corresponding to the first quadratic basis function
     multiplicities = KNOT_MULTIPLICITIES_QUADRATIC[0]
 
-    expected_polynomials = (16 * X ** 2 + 32 * X * Y + 16 * Y ** 2 - 16 * X - 16 * Y + 4,
-                            16 * X ** 2 + 32 * X * Y + 16 * Y ** 2 - 16 * X - 16 * Y + 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    expected_polynomials = [1.0 * (-2.0 * X - 2.0 * Y + 1) ** 2, 1.0 * (-2.0 * X - 2.0 * Y + 1) ** 2, 0, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0]
     computed_polynomials = polynomial_pieces(triangle, multiplicities)
-
     for e, c in zip(expected_polynomials, computed_polynomials):
         np.testing.assert_almost_equal(simplify(e - c), 0)
 
