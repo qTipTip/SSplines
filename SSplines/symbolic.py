@@ -1,9 +1,7 @@
 from math import factorial
 
-import numpy as np
 import sympy as sp
-
-from SSplines import ps12_vertices, signed_area
+from SSplines import ps12_vertices
 from SSplines.constants import DELETED_KNOT_TO_TRIANGLE, KNOT_CONFIGURATION_TO_FACE_INDICES
 
 
@@ -77,12 +75,6 @@ def polynomial_pieces(triangle, multiplicities):
         multinomial = factorial(mu1 + mu2 + mu3) / (factorial(mu1) * factorial(mu2) * factorial(mu3))
         Q = (b1 ** mu1 * b2 ** mu2 * b3 ** mu3) * multinomial
 
-        # Normalize by area
-        area_triangle = abs(signed_area(triangle))
-        area_knot_konfiguration = abs(signed_area(np.array([v1, v2, v3])))
-
-        Q *= area_triangle / area_knot_konfiguration
-
         faces = KNOT_CONFIGURATION_TO_FACE_INDICES[knot_configuration]
         for face in faces:
             polynomials[face] = Q
@@ -97,6 +89,7 @@ def polynomial_pieces(triangle, multiplicities):
         bary_coordinates = barycentric_coordinates_symbolic(v1, v2, v3)
 
         Q = []
+
         # compute contributions recursively
         for i in reduced_knot_configuration:
             reduced_multiplicities = [m - (i == j) for j, m in enumerate(multiplicities)]
@@ -109,5 +102,12 @@ def polynomial_pieces(triangle, multiplicities):
             for j in range(len(Q)):
                 # add the corresponding three contributions
                 polynomials[i] += Q[j][i] * bary_coordinates[j]
+
+        # Normalize by area
+        # area_triangle = abs(signed_area(triangle))
+        # area_knot_configuration = abs(signed_area(np.array([v1, v2, v3])))
+        # factor = area_triangle / area_knot_configuration
+        # for i in range(len(polynomials)):
+        #    polynomials[i] *= factor
 
         return polynomials
