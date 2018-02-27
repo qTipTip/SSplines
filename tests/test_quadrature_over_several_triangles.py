@@ -17,6 +17,4 @@ def test_quadrature_over_multiple_triangles():
     expected_integral = -935 / 3
     computed_integral = gaussian_quadrature_ps12(triangle, f, b, w)
 
-    rel_err = abs(expected_integral - computed_integral) / min(abs(computed_integral), abs(expected_integral))
-
-    assert rel_err < 0.05
+    np.testing.assert_almost_equal(expected_integral, computed_integral)

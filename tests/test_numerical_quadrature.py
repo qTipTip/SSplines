@@ -77,16 +77,16 @@ def test_cubic_reproduction():
 @pytest.mark.skip(reason='Error somewhere in cubic integration')
 def test_cubic_reproduction_unit_simplex():
     def f(p):
-        return p[:, 0] ** 3
+        return p[:, 0] * p[:, 1] ** 2
 
     triangle = np.array([
         [0, 0],
-        [1, 0],
-        [0, 1]
+        [2, 0],
+        [2, 1]
     ])
     b, w = gaussian_quadrature_data(order=3)
 
-    expected_integral = 1 / 20
+    expected_integral = 4 / 15
     computed_integral = gaussian_quadrature(triangle, f, b, w)
 
     np.testing.assert_almost_equal(computed_integral, expected_integral)
