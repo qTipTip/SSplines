@@ -585,3 +585,69 @@ def gaussian_quadrature_ps12(triangle, func, b, w):
 
         i += v
     return i
+
+
+def edge_quadrature_data(order):
+    # http://www.karlin.mff.cuni.cz/~dolejsi/Vyuka/FEM-implement.pdf
+    if order == 2:
+        b = np.array([
+            [0.21132486540519, 0.78867513459481],
+            [0.78867513459481, 0.21132486540519]
+        ])
+        w = np.array([0.5, 0.5])
+
+    elif order == 3:
+        b = np.array([
+            [0.1120166537926, 0.887229833462074],
+            [0.5, 0.5],
+            [0.887229833462074, 0.1120166537926]
+        ])
+        w = np.array([0.277777777777778, 0.444444444444444, 0.277777777777778])
+
+    elif order == 4:
+        b = np.array([
+            [0.06943184420297, 1 - 0.06943184420297],
+            [0.33000947820757, 1 - 0.33000947820757],
+            [0.66999052179243, 1 - 0.66999052179243],
+            [0.93056815579703, 1 - 0.93056815579703]
+        ])
+        w = np.array([0.17392742256873, 0.32607257743127, 0.32607257743127, 0.17392742256873])
+
+    return b, w
+
+
+def edge_quadrature(edge, func, b, w):
+    """
+    Approximates the integral of func over edge using a quadrature rule with specified
+    points and weights.
+    :param edge: two vertices delineating an edge
+    :param func: the integrand
+    :param b: barycentric coordinates of quadrature points with respect to end points
+    :param w: weights of quadrature points
+    :return:
+    """
+
+    p = np.dot(b, edge)  # points in edge
+    f = func(p)
+    length = np.linalg.norm(edge[0, :] - edge[1, :])
+
+    return length * np.dot(f, w)
+
+
+def edge_quadrature_ps12(edge, func, b, w):
+    """
+    Approximates the integral of func over edge using a quadrature rule with specified
+    points and weights, but split over each of the two triangles that lies on the edge.
+    :param edge: two vertices delineating an edge
+    :param func: the integrand
+    :param b: barycentric coordinates of quadrature points with respect to end points
+    :param w: weights of quadrature points
+    :return:
+    """
+
+    mp = (edge[0, :] + edge[1, :]) / 2
+
+    edge_one = np.array([edge[0, :], mp])
+    edge_two = np.array([mp, edge[1, :]])
+
+    return edge_quadrature(edge_one, func, b, w) + edge_quadrature(edge_two, func, b, w)
