@@ -17,7 +17,7 @@ def test_laplacian_quadratic_basis_functions():
     ])
 
     S = SplineSpace(triangle, 2)
-    points = sample_triangle(triangle, 15)
+    points = sample_triangle(triangle, 10)
     for basis_num in range(12):
         b_num = S.basis()[basis_num]
         b_sym = polynomial_pieces(triangle, KNOT_MULTIPLICITIES_QUADRATIC[basis_num])
@@ -40,7 +40,7 @@ def test_gradient_quadratic_basis_functions():
     ])
 
     S = SplineSpace(triangle, 2)
-    points = sample_triangle(triangle, 15)
+    points = sample_triangle(triangle, 10)
     for basis_num in range(12):
         b_num = S.basis()[basis_num]
         b_sym = polynomial_pieces(triangle, KNOT_MULTIPLICITIES_QUADRATIC[basis_num])
@@ -63,7 +63,7 @@ def test_divergence_quadratic_basis_functions():
     ])
 
     S = SplineSpace(triangle, 2)
-    points = sample_triangle(triangle, 15)
+    points = sample_triangle(triangle, 10)
     for basis_num in range(12):
         b_num = S.basis()[basis_num]
         b_sym = polynomial_pieces(triangle, KNOT_MULTIPLICITIES_QUADRATIC[basis_num])
