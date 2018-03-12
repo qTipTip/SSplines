@@ -5,7 +5,7 @@ import sympy as sp
 
 import SSplines
 from SSplines.dicts import KNOT_CONFIGURATION_TO_SUBTRIANGLES, DELETED_KNOT_TO_TRIANGLE, \
-    KNOT_CONFIGURATION_TO_FACE_INDICES
+    KNOT_CONFIGURATION_TO_FACE_INDICES, KNOT_MULTIPLICITIES_QUADRATIC
 
 X, Y = sp.symbols('X Y')
 
@@ -164,6 +164,15 @@ def polynomial_pieces(triangle, knot_multiplicities, first_call=True):
             polynomials[i] *= (area_knot_config / area_full_triang)
     return polynomials
 
+
+def polynomial_basis_quadratic(triangle):
+    """
+    Returns the set of twelve quadratic S-splines on the PS12 in terms of their polynomial pieces.
+    """
+    basis = []
+    for basis_num in range(12):
+        basis.append(polynomial_pieces(triangle, KNOT_MULTIPLICITIES_QUADRATIC[basis_num]))
+    return basis
 
 if __name__ == "__main__":
     triangle = np.array([
