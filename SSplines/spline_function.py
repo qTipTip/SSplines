@@ -122,7 +122,6 @@ class SplineFunction(object):
         :param x: set of points
         :return: lapl f
         """
-
         return self.ddx(x) + self.ddy(x)
 
     # MATHEMATICAL OPERATORS

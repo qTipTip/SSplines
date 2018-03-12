@@ -1,6 +1,7 @@
 import numpy as np
 
-from .constants import PS12_BARYCENTRIC_COORDINATES, PS12_SUB_TRIANGLE_VERTICES
+from .constants import PS12_BARYCENTRIC_COORDINATES, PS12_SUB_TRIANGLE_VERTICES, \
+    PS12_DOMAIN_POINTS_BARYCENTRIC_COORDINATES_QUADRATIC
 
 
 def barycentric_coordinates_multiple_triangles(triangles, point, tol=1.0E-15):
@@ -651,3 +652,20 @@ def edge_quadrature_ps12(edge, func, b, w):
     edge_two = np.array([mp, edge[1, :]])
 
     return edge_quadrature(edge_one, func, b, w) + edge_quadrature(edge_two, func, b, w)
+
+
+def domain_points(triangle, degree):
+    """
+    Returns the domain points for a degree 0/1 spline.
+    :param triangle: vertices of triangle
+    :param degree: 0/1
+    :return: set of 10/12 domain points
+    """
+
+    if degree == 1:
+        return ps12_vertices(triangle)
+    elif degree == 2:
+        return points_from_barycentric_coordinates(triangle=triangle,
+                                                   b=PS12_DOMAIN_POINTS_BARYCENTRIC_COORDINATES_QUADRATIC)
+    else:
+        raise NotImplementedError('Domain points not defined for degrees other than 1 and 2')
