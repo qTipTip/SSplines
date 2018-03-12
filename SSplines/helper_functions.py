@@ -588,6 +588,34 @@ def gaussian_quadrature_ps12(triangle, func, b, w):
     return i
 
 
+def domain_point_quadrature(triangle, func, degree=2):
+    """
+    Approximates the integral of func over the PS12-split of a triangle, using the domain points
+    as integration points. Uniformly weighted.
+    :param triangle: vertices of triangle
+    :param func: func to integrate
+    :return:
+    """
+    p = domain_points(triangle, degree)
+    w = np.ones(12) / 12
+    a = abs(signed_area(triangle))
+
+    f = func(p)
+
+    return a * (np.dot(w, f))
+
+
+def domain_point_quadrature_ps12(triangle, func, degree=2):
+    sub_triangle = ps12_sub_triangles(triangle)
+
+    i = 0
+
+    for t in sub_triangle:
+        v = domain_point_quadrature(t, func, degree)
+        i += v
+    return i
+
+
 def edge_quadrature_data(order):
     # http://www.karlin.mff.cuni.cz/~dolejsi/Vyuka/FEM-implement.pdf
     if order == 2:
