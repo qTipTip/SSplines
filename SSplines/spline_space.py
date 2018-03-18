@@ -1,6 +1,6 @@
 import numpy as np
 
-from SSplines.helper_functions import hermite_basis_coefficients
+from SSplines.helper_functions import hermite_basis_coefficients, points_from_barycentric_coordinates
 from SSplines.spline_function import SplineFunction
 
 
@@ -19,6 +19,7 @@ class SplineSpace(object):
         self.triangle = np.array(triangle)
         self.degree = int(degree)
         self.dimension = 10 if degree == 1 else 12
+        self.basis = None
 
     def function(self, coefficients):
         """
@@ -45,5 +46,23 @@ class SplineSpace(object):
 
         assert self.degree == 2, 'The Hermite basis only exists for degree 2 simplex splines'
 
-        coefficients = hermite_basis_coefficients(self.triangle, outward_normal_derivative=outward_normal)
-        return [self.function(c) for c in coefficients.T]
+        if self.basis is not None:
+            return self.basis
+        else:
+            coefficients = hermite_basis_coefficients(self.triangle, outward_normal_derivative=outward_normal)
+            self.basis = [self.function(c) for c in coefficients.T]
+            return self.basis
+
+    def tabulate_laplacian(self, b):
+        """
+        Given a set of n points, computes
+        the nx12x12 tensor containing laplacian products of basis functions.
+        :param b: barycentric coordinates of points
+        :return:
+        """
+        p = points_from_barycentric_coordinates(self.triangle, b)
+        m = np.atleast_3d(np.array([b.lapl(p) for b in self.hermite_basis()]))
+        m = np.swapaxes(m, 0, 1)
+
+        M = np.einsum('...ik,kj...->...ij', m, m.T)
+        return M

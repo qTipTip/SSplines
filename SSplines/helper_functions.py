@@ -615,7 +615,6 @@ def domain_point_quadrature_ps12(triangle, func, degree=2):
         i += v
     return i
 
-
 def edge_quadrature_data(order):
     # http://www.karlin.mff.cuni.cz/~dolejsi/Vyuka/FEM-implement.pdf
     if order == 2:
