@@ -19,7 +19,6 @@ class SplineSpace(object):
         self.triangle = np.array(triangle)
         self.degree = int(degree)
         self.dimension = 10 if degree == 1 else 12
-        self.basis = None
 
     def function(self, coefficients):
         """
@@ -46,12 +45,9 @@ class SplineSpace(object):
 
         assert self.degree == 2, 'The Hermite basis only exists for degree 2 simplex splines'
 
-        if self.basis is not None:
-            return self.basis
-        else:
-            coefficients = hermite_basis_coefficients(self.triangle, outward_normal_derivative=outward_normal)
-            self.basis = [self.function(c) for c in coefficients.T]
-            return self.basis
+        coefficients = hermite_basis_coefficients(self.triangle, outward_normal_derivative=outward_normal)
+        return [self.function(c) for c in coefficients.T]
+
 
     def tabulate_laplacian(self, b):
         """
