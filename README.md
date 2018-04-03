@@ -8,7 +8,7 @@
 the Powell-Sabin 12-split of a triangle. The evaluation makes use of the
 convenient matrix recurrence relation for the S-spline basis functions for
 constant, linear and quadratic simplex splines as developed in [this
-paper](http://www.ams.org/journals/mcom/2013-82-283/S0025-5718-2013-02664-6/S0025-5718-2013-02664-6.pdf)by
+paper](http://www.ams.org/journals/mcom/2013-82-283/S0025-5718-2013-02664-6/S0025-5718-2013-02664-6.pdf) by
 Cohen, Lyche and Reisenfeld.
 
 ## Functionality
