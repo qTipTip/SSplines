@@ -61,3 +61,14 @@ class SplineSpace(object):
 
         M = np.einsum('...ik,kj...->...ij', m, m.T)
         return M
+
+    def __str__(self):
+        return """
+Degree: {}
+Dimension: {}
+Vertices: 
+    v1: ({}, {})  
+    v2: ({}, {})
+    v3: ({}, {})
+        """.format(self.degree, self.dimension, self.triangle[0, 0], self.triangle[0, 1], self.triangle[1, 0],
+                   self.triangle[1, 1], self.triangle[2, 0], self.triangle[2, 1])
