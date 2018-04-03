@@ -48,7 +48,6 @@ class SplineSpace(object):
         coefficients = hermite_basis_coefficients(self.triangle, outward_normal_derivative=outward_normal)
         return [self.function(c) for c in coefficients.T]
 
-
     def tabulate_laplacian(self, b):
         """
         Given a set of n points, computes

@@ -1,0 +1,11 @@
+language: python
+python:
+  - "3.5"
+install:
+  - pip install numpy
+  - pip install coveralls
+  - pip install pytest-cov
+script:
+  - pytest --cov SSplines/
+after_success:
+  - coveralls
