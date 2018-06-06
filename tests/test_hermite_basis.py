@@ -13,7 +13,7 @@ def test_hermite_basis_nodal_properties():
 
     d = 2
     S = SplineSpace(triangle, d)
-    B = S.hermite_basis()
+    B = S.hermite_basis(outward_normal=False)
 
     n1 = np.array([0, 1])
     n2 = np.array([-np.sqrt(2) / 2, -np.sqrt(2) / 2])
