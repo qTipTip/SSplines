@@ -31,7 +31,14 @@ At the moment, the SSpline library features:
 
 ## Installation
 
-Installation through `pip` is not yet available, but will soon be supported.
+### Pip
+Install using `pip` with the command:
+
+```bash
+pip install SSplines
+```
+
+### Locally
 The package can be installed locally by cloning the repository:
 
 ```bash
