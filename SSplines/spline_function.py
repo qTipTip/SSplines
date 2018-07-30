@@ -1,14 +1,13 @@
 import numpy as np
 
 from SSplines.constants import UY, UX
-from SSplines.helper_functions import coefficients_linear, coefficients_quadratic, barycentric_coordinates, \
-    determine_sub_triangle, evaluate_non_zero_basis_splines, evaluate_non_zero_basis_derivatives, \
+from SSplines.helper_functions import coefficients_linear, coefficients_quadratic, coefficients_cubic, \
+    barycentric_coordinates, determine_sub_triangle, evaluate_non_zero_basis_splines, evaluate_non_zero_basis_derivatives, \
     directional_coordinates
-
 
 class SplineFunction(object):
     """
-    Represents a single callable spline function of degree 0/1/2 over the PS12-split of given triangle.
+    Represents a single callable spline function of degree 0/1/2/3 over the PS12-split of given triangle.
     """
 
     def __init__(self, triangle, degree, coefficients):
@@ -23,11 +22,13 @@ class SplineFunction(object):
         :return : indices
         """
         if self.degree == 0:
-            return np.take(self.coefficients, k)
+            return np.take(np.append(self.coefficients,0), k)
         elif self.degree == 1:
-            return np.take(self.coefficients, coefficients_linear(k))
+            return np.take(np.append(self.coefficients,0), coefficients_linear(k))
         elif self.degree == 2:
-            return np.take(self.coefficients, coefficients_quadratic(k))
+            return np.take(np.append(self.coefficients,0), coefficients_quadratic(k))
+        elif self.degree == 3:
+            return np.take(np.append(self.coefficients,0), coefficients_cubic(k))
 
     def __call__(self, x):
         """

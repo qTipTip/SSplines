@@ -2,6 +2,7 @@ import math
 
 import numpy as np
 import sympy as sp
+from fractions import Fraction
 
 import SSplines
 from SSplines.dicts import KNOT_CONFIGURATION_TO_SUBTRIANGLES, DELETED_KNOT_TO_TRIANGLE, \
@@ -71,23 +72,20 @@ def multinomial(i, j, k):
     """
     Computes the trinomial for use in evaluation of Bernstein polynomials.
     """
-    return math.factorial(i + j + k) / (math.factorial(i) * math.factorial(j) * math.factorial(k))
+    return Fraction(math.factorial(i + j + k), math.factorial(i) * math.factorial(j) * math.factorial(k))
 
 
 def bernstein_polynomial(full_triangle, sub_triangle, non_zero_multiplicities):
     """
-    Computes the bernstein polynomial over given triangle with knot
+    Computes the Bernstein polynomial over given triangle with knot
     multiplicities. Non_zero_multiplicities has to be of length 3!
     """
     b1, b2, b3 = barycentric_coordinates(sub_triangle)
     m1, m2, m3 = [m - 1 for m in non_zero_multiplicities]
-
-    area_full = SSplines.area(full_triangle)
-    area_sub = SSplines.area(sub_triangle)
-
-    Q = b1 ** m1 * b2 ** m2 * b3 ** m3 * multinomial(m1, m2, m3) * area_full / area_sub
+    ##area_full = SSplines.area(full_triangle)
+    ##area_sub = SSplines.area(sub_triangle)
+    Q = b1 ** m1 * b2 ** m2 * b3 ** m3 * multinomial(m1, m2, m3) #* area_full / area_sub
     return Q
-
 
 def remove_knot(knot_multiplicities, knot):
     """
@@ -122,17 +120,20 @@ def polynomial_pieces(triangle, knot_multiplicities, first_call=True):
 
     ps12 = SSplines.ps12_vertices(triangle)
     non_zero_knots, knot_configuration = non_zero_multiplicities(knot_multiplicities)
-    polynomials = [0] * 12
+    polynomials = [X - X] * 12 # Make sure to consistently return SymPy expressions.
     # if the triangle has zero area, return zeros.
     if degenerate(tuple(knot_configuration)):
         return polynomials
 
-    # or, if there are three distinct knots, compute bernstein)
+    # or, if there are three distinct knots, compute Bernstein
     # polynomial contributions
     elif len(knot_configuration) == 3:
         sub_triangle = ps12[knot_configuration]
         full_triangle = ps12[[0, 1, 2]]
-        Q = bernstein_polynomial(full_triangle, sub_triangle, non_zero_knots)
+        area_full = SSplines.area(full_triangle)[0]
+        area_sub = SSplines.area(sub_triangle)[0]
+        Q = bernstein_polynomial(full_triangle, sub_triangle, non_zero_knots) * area_full / area_sub
+        
         for face in knot_configuration_to_face(knot_configuration):
             polynomials[face] += Q
 
@@ -156,12 +157,12 @@ def polynomial_pieces(triangle, knot_multiplicities, first_call=True):
 
     # If this is the final return statement in the recurrence, then normalize
     # by area to obtain the S-spline basis.
-    if first_call:
-        area_knot_config = knot_configuration_area(knot_configuration, ps12)
-        area_full_triang = SSplines.area(ps12[[0, 1, 2]])
+    #if first_call:
+    #    area_knot_config = knot_configuration_area(knot_configuration, ps12)
+    #    area_full_triang = SSplines.area(ps12[[0, 1, 2]])
+    #    for i in range(len(polynomials)):
+    #        polynomials[i] *= (area_knot_config[0] / area_full_triang[0])
 
-        for i in range(len(polynomials)):
-            polynomials[i] *= (area_knot_config / area_full_triang)
     return polynomials
 
 
