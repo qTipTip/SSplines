@@ -9,6 +9,8 @@ from .constants import PS12_BARYCENTRIC_COORDINATES, PS12_SUB_TRIANGLE_VERTICES,
     PS12_DOMAIN_POINTS_BARYCENTRIC_COORDINATES_QUADRATIC, \
     PS12_DOMAIN_POINTS_BARYCENTRIC_COORDINATES_CUBIC
 
+from SSplines.dicts import KNOT_CONFIGURATION_TO_FACE_INDICES
+
 def barycentric_coordinates_multiple_triangles(triangles, point, tol=1.0E-15):
     """
     Computes the barycentric coordinates of a single point with respect to a set of triangles.
@@ -788,7 +790,6 @@ def domain_points(triangle, degree):
     else:
         raise NotImplementedError('Domain points not defined for degrees other than 1 and 2')
 
-from SSplines.dicts import KNOT_CONFIGURATION_TO_FACE_INDICES
 
 def simplex_spline_graphic_small(mm, scale = 2, filename = False, is_visible = True):
     """
@@ -833,7 +834,7 @@ def simplex_spline_graphic_small(mm, scale = 2, filename = False, is_visible = T
     F = [[1,6,7],[1,4,7],[2,4,8],[2,5,8],[3,5,9],[3,6,9],[6,7,10],[4,7,10],[4,8,10],[5,8,10],[5,9,10],[6,9,10]]
     mm0 = tuple([i for i in range(len(mm)) if mm[i] != 0])
     for f in KNOT_CONFIGURATION_TO_FACE_INDICES[mm0]:
-        ax.add_artist(matplotlib.patches.Polygon([Lv[i-1] for i in F[f-1]], color='#8888ff'))
+        ax.add_artist(matplotlib.patches.Polygon([Lv[i-1] for i in F[f]], color='#8888ff'))
 
     plt.axis('equal')
     plt.axis('off')
