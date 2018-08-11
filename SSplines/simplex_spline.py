@@ -4,8 +4,8 @@ import sympy as sp
 from SSplines.constants import UY, UX
 from SSplines.dicts import KNOT_CONFIGURATION_TO_FACE_INDICES
 from SSplines.helper_functions import coefficients_linear, coefficients_quadratic, coefficients_cubic, \
-    barycentric_coordinates, determine_sub_triangle, evaluate_non_zero_basis_splines, evaluate_non_zero_basis_derivatives, \
-    directional_coordinates
+    barycentric_coordinates, determine_sub_triangle, evaluate_non_zero_basis_splines, \
+    evaluate_non_zero_basis_derivatives, directional_coordinates, points_from_barycentric_coordinates
 from SSplines.symbolic import polynomial_pieces
     
 class SimplexSpline(object):
@@ -20,15 +20,17 @@ class SimplexSpline(object):
         self.degree = sum(knot_multiplicities) - 3
         self.polynomial_pieces = polynomial_pieces(triangle, knot_multiplicities)
 
-    def __call__(self, x, exact = False, barycentric = False):
+    def __call__(self, y, exact = False, barycentric = False):
         """
         Evaluates the spline function at point(s) x.
         :param x: set of points
         :return: f(x)
         """
         if barycentric:
-            b = x
+            b = y
+            x = points_from_barycentric_coordinates(self.triangle, b)
         else:
+            x = y
             b = barycentric_coordinates(self.triangle, x, exact = exact)
 
         k = determine_sub_triangle(b)

@@ -140,21 +140,6 @@ PS12_DOMAIN_POINTS_BARYCENTRIC_COORDINATES = [
     PS12_DOMAIN_POINTS_BARYCENTRIC_COORDINATES_QUADRATIC,
     PS12_DOMAIN_POINTS_BARYCENTRIC_COORDINATES_CUBIC,
 ]
-    
-#PS12_DOMAIN_POINTS_BARYCENTRIC_COORDINATES_QUADRATIC = np.array([
-#    [1, 0, 0],
-#    [0.75, 0.25, 0],
-#    [5 / 12, 5 / 12, 2 / 12],
-#    [0.25, 0.75, 0],
-#    [0, 1, 0],
-#    [0, 0.75, 0.25],
-#    [2 / 12, 5 / 12, 5 / 12],
-#    [0, 0.25, 0.75],
-#    [0, 0, 1],
-#    [0.25, 0, 0.75],
-#    [5 / 12, 2 / 12, 5 / 12],
-#    [0.75, 0, 0.25]
-#])
 
 PS12_SUB_TRIANGLE_VERTICES = np.array([
     [0, 6, 5],

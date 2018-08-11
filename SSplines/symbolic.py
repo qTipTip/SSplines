@@ -6,8 +6,9 @@ from fractions import Fraction
 
 import SSplines
 from SSplines.dicts import KNOT_CONFIGURATION_TO_SUBTRIANGLES, DELETED_KNOT_TO_TRIANGLE, \
-    KNOT_CONFIGURATION_TO_FACE_INDICES, KNOT_MULTIPLICITIES_QUADRATIC
-
+    KNOT_CONFIGURATION_TO_FACE_INDICES
+from SSplines.constants import KNOT_MULTIPLICITIES_QUADRATIC
+    
 X, Y = sp.symbols('X Y')
 
 
