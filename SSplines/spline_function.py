@@ -1,7 +1,7 @@
 import numpy as np
 
 from SSplines.constants import UY, UX
-from SSplines.helper_functions import coefficients_linear, coefficients_quadratic, coefficients_cubic, \
+from SSplines.helper_functions import coefficients_linear, coefficients_quadratic, coefficients_quadratic_alternative, coefficients_cubic, \
     barycentric_coordinates, determine_sub_triangle, evaluate_non_zero_basis_splines, evaluate_non_zero_basis_derivatives, \
     directional_coordinates
 
@@ -10,10 +10,11 @@ class SplineFunction(object):
     Represents a single callable spline function of degree 0/1/2/3 over the PS12-split of given triangle.
     """
 
-    def __init__(self, triangle, degree, coefficients):
+    def __init__(self, triangle, degree, coefficients, alternative_basis = False):
         self.triangle = np.array(triangle)
         self.degree = int(degree)
         self.coefficients = np.array(coefficients)
+        self.alternative_basis = alternative_basis
 
     def _non_zero_coefficients(self, k):
         """
@@ -26,20 +27,26 @@ class SplineFunction(object):
         elif self.degree == 1:
             return np.take(np.append(self.coefficients,0), coefficients_linear(k))
         elif self.degree == 2:
-            return np.take(np.append(self.coefficients,0), coefficients_quadratic(k))
+            if self.alternative_basis:
+                return np.take(np.append(self.coefficients,0), coefficients_quadratic_alternative(k))
+            else:
+                return np.take(np.append(self.coefficients,0), coefficients_quadratic(k))
         elif self.degree == 3:
             return np.take(np.append(self.coefficients,0), coefficients_cubic(k))
 
-    def __call__(self, x):
+    def __call__(self, x, barycentric = False, exact = False):
         """
         Evaluates the spline function at point(s) x.
         :param x: set of points
         :return: f(x)
         """
+        if barycentric:
+            b = x
+        else:
+            b = barycentric_coordinates(self.triangle, x, exact = exact)
 
-        b = barycentric_coordinates(self.triangle, x)
         k = determine_sub_triangle(b)
-        z = evaluate_non_zero_basis_splines(b=b, d=self.degree, k=k)
+        z = evaluate_non_zero_basis_splines(b=b, d=self.degree, k=k, exact = exact, alternative_basis = self.alternative_basis)
         c = self._non_zero_coefficients(k)
 
         return np.einsum('...i,...i->...', z, c)  # broadcast the dot product to compute all values at once.

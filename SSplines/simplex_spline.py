@@ -20,14 +20,17 @@ class SimplexSpline(object):
         self.degree = sum(knot_multiplicities) - 3
         self.polynomial_pieces = polynomial_pieces(triangle, knot_multiplicities)
 
-    def __call__(self, x, exact = False):
+    def __call__(self, x, exact = False, barycentric = False):
         """
         Evaluates the spline function at point(s) x.
         :param x: set of points
         :return: f(x)
         """
+        if barycentric:
+            b = x
+        else:
+            b = barycentric_coordinates(self.triangle, x, exact = exact)
 
-        b = barycentric_coordinates(self.triangle, x, exact = exact)
         k = determine_sub_triangle(b)
         
         if exact:

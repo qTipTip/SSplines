@@ -123,7 +123,7 @@ def ps12_sub_triangles(triangle):
     return np.take(ps12_vertices(triangle), PS12_SUB_TRIANGLE_VERTICES, axis=0)
 
 
-def r1_single(B):
+def r1_single(B, exact = False):
     """
     Computes the linear evaluation matrix for Splines on the Powell-Sabin
     12-split of the triangle delineated by given vertices, evaluated at x.
@@ -131,7 +131,11 @@ def r1_single(B):
     :return: (12x10) linear evaluation matrix.
     """
 
-    R = np.zeros((12, 10))
+    if exact:
+        R = np.zeros((12, 10), dtype = object)
+    else:
+        R = np.zeros((12, 10))
+    
     b = B[:, None] - B[None, :]  # beta
     g = 2 * B - 1
 
@@ -150,7 +154,7 @@ def r1_single(B):
     return R
 
 
-def r2_single(B):
+def r2_single(B, exact = False, alternative_basis = False):
     """
     Computes the quadratic evaluation matrix for Splines on the Powell-Sabin
     12-split of the triangle delineated by given vertices, evaluated at x.
@@ -158,24 +162,43 @@ def r2_single(B):
     :return: (10x12) quadratic evaluation matrix.
     """
 
-    R = np.zeros((10, 12))
+    if exact:
+        R = np.zeros((10, 12), dtype = object)
+        f = Fraction(1,2)
+    else:
+        R = np.zeros((10, 12))
+        f = 0.5
+    
     g = 2 * B - 1  # gamma
     b = B[:, None] - B[None, :]  # beta
 
-    R[0, :] = [g[0], 2 * B[1], 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 * B[2]]
-    R[1, 3:6] = [2 * B[0], g[1], 2 * B[2]]
+    R[0,  :  ] = [g[0], 2 * B[1], 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 * B[2]]
+    R[1, 3:6 ] = [2 * B[0], g[1], 2 * B[2]]
     R[2, 7:10] = [2 * B[1], g[2], 2 * B[0]]
-    R[3, 1:4] = [b[0, 2], 3 * B[2], b[1, 2]]
-    R[4, 5:8] = [b[1, 0], 3 * B[0], b[2, 0]]
-    R[5, 9:] = [b[2, 1], 3 * B[1], b[0, 1]]
-    R[6, :] = [0, 0.5 * b[0, 2], 1.5 * B[1], 0, 0, 0, 0, 0, 0, 0, 1.5 * B[2], 0.5 * b[0, 1]]
-    R[7, :] = [0, 0, 1.5 * B[0], 0.5 * b[1, 2], 0, 0.5 * b[1, 0], 1.5 * B[2], 0, 0, 0, 0, 0]
-    R[8, :] = [0, 0, 0, 0, 0, 0, 1.5 * B[1], 0.5 * b[2, 0], 0, 0.5 * b[2, 1], 1.5 * B[0], 0]
-    R[9, :] = [0, 0, -g[2], 0, 0, 0, -g[0], 0, 0, 0, -g[1], 0]
-
+    R[3, 1:4 ] = [b[0, 2], 3 * B[2], b[1, 2]]
+    R[4, 5:8 ] = [b[1, 0], 3 * B[0], b[2, 0]]
+    R[5, 9:  ] = [b[2, 1], 3 * B[1], b[0, 1]]
+    R[6,  :  ] = [0, f * b[0, 2], 3 * f * B[1], 0, 0, 0, 0, 0, 0, 0, 3 * f * B[2], f * b[0, 1]]
+    R[7,  :  ] = [0, 0, 3*f * B[0], f * b[1, 2], 0, f * b[1, 0], 3*f * B[2], 0, 0, 0, 0, 0]
+    R[8,  :  ] = [0, 0, 0, 0, 0, 0, 3 * f * B[1], f * b[2, 0], 0, f * b[2, 1], 3 * f * B[0], 0]
+    R[9,  :  ] = [0, 0, -g[2], 0, 0, 0, -g[0], 0, 0, 0, -g[1], 0]
+    
+    if alternative_basis:
+        if exact:
+            T = np.identity(12, dtype = object)
+            T[2:11:4,2:11:4] = np.array([[Fraction(1,2), Fraction(1,2),             0], \
+                                         [            0, Fraction(1,2), Fraction(1,2)], \
+                                         [Fraction(1,2),             0, Fraction(1,2)]], dtype = object)
+        else:
+            T = np.identity(12, dtype = float)
+            T[2:11:4,2:11:4] = np.array([[0.5, 0.5,   0], \
+                                         [0.0, 0.0, 0.5], \
+                                         [0.5, 0.0, 0.5]], dtype = float)
+        R = np.dot(R, T)
+    
     return R
 
-def r3_single(B):
+def r3_single(B, exact = False, alternative_basis = False):
     """
     Computes the cubic evaluation matrix for splines on the Powell-Sabin
     12-split of the triangle delineated by given vertices, evaluated at x.
@@ -183,27 +206,48 @@ def r3_single(B):
     :return: (12x16) cubic evaluation matrix.
     """
 
-    R = np.zeros((12, 16))
+    if exact:
+        R = np.zeros((12, 16), dtype = object)
+        f = Fraction(1,3)
+    else:
+        R = np.zeros((12, 16))
+        f = 1.0/3
+    
     g = 2 * B - 1  # gamma
     b = B[:, None] - B[None, :]  # beta
     s = B[:, None] + B[None, :]  # sigma
     
     R[0,:] = [g[0],2*B[1],0,0,0,0,0,0,0,0,0,2*B[2],0,0,0,0]
     R[1,:] = [0,b[0,2],B[1],0,0,0,0,0,0,0,0,0,2*B[2],0,0,0]
-    R[2,:] = [0,0,s[0,1]/3,0,0,0,B[2]/3,0,0,0,B[2]/3,0,2*B[0]/3,2*B[1]/3,0,B[2]/3]
-    R[3,:] = [0,0,B[0],b[1,2],0,0,0,0,0,0,0,0,0,2*B[2],0,0] 
+    R[2,:] = [0,0,f*s[0,1],0,0,0,f*B[2],0,0,0,f*B[2],0,2*f*B[0],2*f*B[1],0,f*B[2]]
+    R[3,:] = [0,0,B[0],b[1,2],0,0,0,0,0,0,0,0,0,2*B[2],0,0]
     R[4,:] = [0,0,0,2*B[0],g[1],2*B[2],0,0,0,0,0,0,0,0,0,0]
     R[5,:] = [0,0,0,0,0,b[1,0],B[2],0,0,0,0,0,0,2*B[0],0,0]    
-    R[6,:] = [0,0,B[0]/3,0,0,0,s[1,2]/3,0,0,0,B[0]/3,0,0,2*B[1]/3,2*B[2]/3,B[0]/3]
+    R[6,:] = [0,0,f*B[0],0,0,0,f*s[1,2],0,0,0,f*B[0],0,0,2*f*B[1],2*f*B[2],f*B[0]]
     R[7,:] = [0,0,0,0,0,0,B[1],b[2,0],0,0,0,0,0,0,2*B[0],0]
     R[8,:] = [0,0,0,0,0,0,0,2*B[1],g[2],2*B[0],0,0,0,0,0,0]
     R[9,:] = [0,0,0,0,0,0,0,0,0,b[2,1],B[0],0,0,0,2*B[1],0]
-    R[10,:] = [0,0,B[1]/3,0,0,0,B[1]/3,0,0,0,s[0,2]/3,0,2*B[0]/3,0,2*B[2]/3,B[1]/3]
+    R[10,:] = [0,0,f*B[1],0,0,0,f*B[1],0,0,0,f*s[0,2],0,2*f*B[0],0,2*f*B[2],f*B[1]]
     R[11,:] = [0,0,0,0,0,0,0,0,0,0,B[2],b[0,1],2*B[1],0,0,0]
     
+    if alternative_basis:
+        if exact:
+            T = np.identity(16, dtype = object)
+            T[12:16,12:16] = np.array([[Fraction(3,4),            0,            0,Fraction(1,4)], \
+                                       [            0,Fraction(3,4),            0,Fraction(1,4)], \
+                                       [            0,            0,Fraction(3,4),Fraction(1,4)], \
+                                       [            0,            0,            0,            1]], dtype = object)
+        else:
+            T = np.identity(16, dtype = float)
+            T[12:16,12:16] = np.array([[0.75,   0,   0,0.25], \
+                                       [   0,0.75,   0,0.25], \
+                                       [   0,   0,0.75,0.25], \
+                                       [   0,   0,   0,   1]], dtype = float)
+        R = np.dot(R, T)
+
     return R
     
-def u1_single(A):
+def u1_single(A, exact = False):
     """
     Computes the linear derivative matrix for Splines on the Powell-Sabin
     12-split of the triangle delineated by given vertices in the direction u.
@@ -211,7 +255,11 @@ def u1_single(A):
     :return: (12x10) linear derivative matrix.
     """
 
-    U = np.zeros((12, 10))
+    if exact:
+        U = np.zeros((12, 10), dtype = object)
+    else:
+        U = np.zeros((12, 10))
+    
     a = A[:, None] - A[None, :]
 
     U[0:2, 0] = [2 * A[0], 2 * A[0]]
@@ -228,15 +276,20 @@ def u1_single(A):
     return U
 
 
-def u2_single(A):
+def u2_single(A, exact = False):
     """
     Computes the quadratic derivative matrix for Splines on the Powell-Sabin
     12-split of the triangle delineated by given vertices in the direction u.
     :param A: directional coordinates wrt to triangle
-    :return: (12x10) quadratic derivative matrix.
+    :return: (10x12) quadratic derivative matrix.
     """
+    if exact:
+        U = np.zeros((10, 12), dtype = object)
+        f = Fraction(1,2)
+    else:
+        U = np.zeros((10, 12))
+        f = 0.5
 
-    U = np.zeros((10, 12))
     a = A[:, None] - A[None, :]
 
     U[0, :] = [2 * A[0], 2 * A[1], 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 * A[2]]
@@ -245,75 +298,144 @@ def u2_single(A):
     U[3, 1:4] = [a[0, 2], 3 * A[2], a[1, 2]]
     U[4, 5:8] = [a[1, 0], 3 * A[0], a[2, 0]]
     U[5, 9:] = [a[2, 1], 3 * A[1], a[0, 1]]
-    U[6, :] = [0, 0.5 * a[0, 2], 1.5 * A[1], 0, 0, 0, 0, 0, 0, 0, 1.5 * A[2], 0.5 * a[0, 1]]
-    U[7, :] = [0, 0, 1.5 * A[0], 0.5 * a[1, 2], 0, 0.5 * a[1, 0], 1.5 * A[2], 0, 0, 0, 0, 0]
-    U[8, :] = [0, 0, 0, 0, 0, 0, 1.5 * A[1], 0.5 * a[2, 0], 0, 0.5 * a[2, 1], 1.5 * A[0], 0]
+    U[6, :] = [0, f * a[0, 2], 3*f * A[1], 0, 0, 0, 0, 0, 0, 0, 3*f * A[2], f * a[0, 1]]
+    U[7, :] = [0, 0, 3*f * A[0], f * a[1, 2], 0, f * a[1, 0], 3*f * A[2], 0, 0, 0, 0, 0]
+    U[8, :] = [0, 0, 0, 0, 0, 0, 3*f * A[1], f * a[2, 0], 0, f * a[2, 1], 3*f * A[0], 0]
     U[9, :] = [0, 0, -2 * A[2], 0, 0, 0, -2 * A[0], 0, 0, 0, -2 * A[1], 0]
 
     return U
 
-# TODO: Define u2_single(A)
+def u3_single(A, exact = False):
+    """
+    Computes the cubic derivative matrix for Splines on the Powell-Sabin
+    12-split of the triangle delineated by given vertices in the direction u.
+    :param A: directional coordinates wrt to triangle
+    :return: (12x16) cubic derivative matrix.
+    """
+
+    if exact:
+        U = np.zeros((12, 16), dtype = object)
+        f = Fraction(1,3)
+    else:
+        U = np.zeros((12, 16))
+        f = 1.0/3
     
-def r1(B):
+    a = A[:, None] - A[None, :]  # alpha
+    t = A[:, None] + A[None, :]  # tau
+    
+    R[0,:] = [2*A[0],2*A[1],0,0,0,0,0,0,0,0,0,2*A[2],0,0,0,0]
+    R[1,:] = [0,a[0,2],A[1],0,0,0,0,0,0,0,0,0,2*A[2],0,0,0]
+    R[2,:] = [0,0,f*t[0,1],0,0,0,f*A[2],0,0,0,f*A[2],0,2*f*A[0],2*f*A[1],0,f*A[2]]
+    R[3,:] = [0,0,A[0],a[1,2],0,0,0,0,0,0,0,0,0,2*A[2],0,0]
+    R[4,:] = [0,0,0,2*A[0],2*A[1],2*A[2],0,0,0,0,0,0,0,0,0,0]
+    R[5,:] = [0,0,0,0,0,a[1,0],A[2],0,0,0,0,0,0,2*A[0],0,0]    
+    R[6,:] = [0,0,f*A[0],0,0,0,f*t[1,2],0,0,0,f*A[0],0,0,2*f*A[1],2*f*A[2],f*A[0]]
+    R[7,:] = [0,0,0,0,0,0,A[1],a[2,0],0,0,0,0,0,0,2*A[0],0]
+    R[8,:] = [0,0,0,0,0,0,0,2*A[1],2*A[2],2*A[0],0,0,0,0,0,0]
+    R[9,:] = [0,0,0,0,0,0,0,0,0,a[2,1],A[0],0,0,0,2*A[1],0]
+    R[10,:] = [0,0,f*A[1],0,0,0,f*A[1],0,0,0,f*t[0,2],0,2*f*A[0],0,2*f*A[2],f*A[1]]
+    R[11,:] = [0,0,0,0,0,0,0,0,0,0,A[2],a[0,1],2*A[1],0,0,0]
+    
+    return R
+
+def r1(B, exact = False, alternative_basis = False):
     """
     Computes R1 matrices for a series of barycentric coordinates.
     :param B: barycentric coordinates
     :return: (len(B), 12, 10) array of matrices
     """
-    R = np.empty((len(B), 12, 10))
+    if exact:
+        R = np.empty((len(B), 12, 10), dtype = object)
+    else:
+        R = np.empty((len(B), 12, 10))
+
     for i, b in enumerate(B):
-        R[i] = r1_single(b)
+        R[i] = r1_single(b, exact = exact)
+
     return R
 
 
-def r2(B):
+def r2(B, exact = False, alternative_basis = False):
     """
     Computes R2 matrices for a series of barycentric coordinates.
     :param B: barycentric coordinates
     :return: (len(B), 10, 12) array of matrices
     """
-    R = np.empty((len(B), 10, 12))
+    if exact:
+        R = np.empty((len(B), 10, 12), dtype = object)
+    else:
+        R = np.empty((len(B), 10, 12))
+
     for i, b in enumerate(B):
-        R[i] = r2_single(b)
+        R[i] = r2_single(b, exact = exact, alternative_basis = alternative_basis)
+    
     return R
 
-def r3(B):
+def r3(B, exact = False, alternative_basis = False):
     """
     Computes R2 matrices for a series of barycentric coordinates.
     :param B: barycentric coordinates
     :return: (len(B), 12, 16) array of matrices
     """
-    R = np.empty((len(B), 12, 16))
+    if exact:
+        R = np.empty((len(B), 12, 16), dtype = object)
+    else:
+        R = np.empty((len(B), 12, 16))
+
     for i, b in enumerate(B):
-        R[i] = r3_single(b)
+        R[i] = r3_single(b, exact = exact, alternative_basis = alternative_basis)
     return R
 
-def u1(A):
+def u1(A, exact = False):
     """
     Computes U1 matrices for a series of directional coordinates.
     :param A: directional coordinates
     :return: (len(A), 12, 10) array of matrices
     """
-    U = np.empty((len(A), 12, 10))
+    if exact:
+        U = np.empty((len(A), 12, 10), dtype = object)
+    else:
+        U = np.empty((len(A), 12, 10))
+
     for i, a in enumerate(A):
-        U[i] = u1_single(a)
+        U[i] = u1_single(a, exact = exact)
+    
     return U
 
 
-def u2(A):
+def u2(A, exact = False):
     """
     Computes U2 matrices for a series of directional coordinates.
     :param A: barycentric coordinates
     :return: (len(A), 10, 12) array of matrices
     """
-    U = np.empty((len(A), 10, 12))
+    if exact:
+        U = np.empty((len(A), 10, 12), dtype = object)
+    else:
+        U = np.empty((len(A), 10, 12))
+
     for i, a in enumerate(A):
-        U[i] = u2_single(a)
+        U[i] = u2_single(a, exact = exact)
+    
     return U
 
-# TODO: Define u3(A)
+def u3(A, exact = False):
+    """
+    Computes U3 matrices for a series of directional coordinates.
+    :param A: barycentric coordinates
+    :return: (len(A), 12, 16) array of matrices
+    """
+    if exact:
+        U = np.empty((len(A), 12, 16), dtype = object)
+    else:
+        U = np.empty((len(A), 12, 16))
 
-def evaluate_non_zero_basis_splines(d, b, k):
+    for i, a in enumerate(A):
+        U[i] = u3_single(a, exact = exact)
+
+    return U
+    
+def evaluate_non_zero_basis_splines(d, b, k, exact = False, alternative_basis = False):
     """
     Evaluates the non-zero basis splines of degree d over a set of point(s) represented by its barycentric coordinates
     over the PS12 split of a triangle.
@@ -323,18 +445,29 @@ def evaluate_non_zero_basis_splines(d, b, k):
     :return: array, ndarray of non-zero basis splines evaluated at x.
     """
 
-    s = np.ones((len(b), 1))
-
-    matrices = [r1, r2, r3]
+    if exact:
+        s = np.ones((len(b), 1), dtype = object)
+    else:
+        s = np.ones((len(b), 1))
     
-    R = [matrices[i](b) for i in range(d)]
+    matrices = [r1, r2, r3]
+    #If an alternative basis is chosen, we modify the recursion matrix of highest degree.
+    R = [matrices[i](b, exact = exact, alternative_basis = (alternative_basis and i == d-1)) for i in range(d)]
+    
     for i in range(d):
-        sub = sub_matrix(R[i], i + 1, k)  # extract sub matrices used for evaluation
-        s = np.einsum('...ij,...jk->...ik', np.atleast_3d(s), sub)  # compute a broadcast dot product
+        # extract sub matrices used for evaluation
+        # If an alternative basis is chosen, we modify the recursion matrix of highest degree.
+        sub = sub_matrix(R[i], i + 1, k, exact = exact, alternative_basis = (alternative_basis and i == d-1) )
+        
+        if exact:
+            s = np.dot(s,sub)
+        else:
+            s = np.einsum('...ij,...jk->...ik', np.atleast_3d(s), sub)  # compute a broadcast dot product
+    
     return np.squeeze(s)  # squeeze to remove redundant dimension
 
-
-def evaluate_non_zero_basis_derivatives(d, r, b, a, k):
+# TODO: Implement evaluation of derivatives in exact arithmetic.
+def evaluate_non_zero_basis_derivatives(d, r, b, a, k, exact = False, alternative_basis = False):
     """
     Evaluates the r'th directional derivative of the non-zero basis splines of degree d at point x
     over the Powell-Sabin 12 split of the given triangle.
@@ -352,11 +485,12 @@ def evaluate_non_zero_basis_derivatives(d, r, b, a, k):
     U = [u_matrices[i](a) for i in range(d)]
 
     for i in range(d - r):
-        r_sub = sub_matrix(R[i], i + 1, k)
+        r_sub = sub_matrix(R[i], i + 1, k, exact = exact, alternative_basis = alternative_basis)
         s = np.einsum('...ij,...jk->...ik', np.atleast_3d(s), r_sub)  # compute a broadcast dot product
 
     for j, i in enumerate(range(d - r, d)):
-        u_sub = sub_matrix(np.repeat(U[i], len(k), axis=0), i + 1, k)  # in order to extract sub-matrices properly.
+        # in order to extract sub-matrices properly.
+        u_sub = sub_matrix(np.repeat(U[i], len(k), axis=0), i + 1, k, exact = exact, alternative_basis = alternative_basis)  
         s = (i + 1) * np.einsum('...ij,...jk->...ik', np.atleast_3d(s), u_sub)
     return np.squeeze(s)  # squeeze to remove redundant dimension
 
@@ -375,6 +509,24 @@ def coefficients_cubic(k):
         [2,3,5,6, 7,10,12,13,14,15,-1], [2,5,6,7, 9,10,12,13,14,15,-1], [2,6,7,9,10,11,12,13,14,15,-1]
     ], dtype=np.int)
     return c3[k]
+
+    
+def coefficients_quadratic_alternative(k):
+    """
+    Returns the indices of quadratic coefficients corresponding to non-zero S-splines on a set of
+    sub-triangles k.
+    :param k: array of indices
+    :return: array of coefficient indices
+    """
+
+    c2 = np.array([
+        [0, 1, 2, 6,  9, 10, 11], [0, 1, 2, 3,  6, 10, 11], [1, 2, 3, 4,  5,  6, 10],
+        [2, 3, 4, 5,  6,  7, 10], [2, 5, 6, 7,  8,  9, 10], [2, 6, 7, 8,  9, 10, 11],
+        [1, 2, 6, 9, 10, 11, -1], [1, 2, 3, 6, 10, 11, -1], [1, 2, 3, 5,  6, 10, -1],
+        [2, 3, 5, 6,  7, 10, -1], [2, 5, 6, 7,  9, 10, -1], [2, 6, 7, 9, 10, 11, -1]
+    ], dtype=np.int)
+    
+    return c2[k]
 
     
 def coefficients_quadratic(k):
@@ -409,7 +561,7 @@ def coefficients_linear(k):
     return c1[k]
 
 
-def sub_matrix(matrix, d, k):
+def sub_matrix(matrix, d, k, exact = False, alternative_basis = False):
     """
     Gets the sub-matrix used in evaluation over sub-triangle k for the S-spline matrix or matrices of degree d.
     :param matrix: S-spline matrix(ces) of degree 1, 2, or 3. Note, len(matrix) has to equal(len(k))
@@ -421,20 +573,38 @@ def sub_matrix(matrix, d, k):
     c1, c2, c3 = coefficients_linear, coefficients_quadratic, coefficients_cubic
     n = matrix.shape[0]
     if d == 1:
-        s = np.zeros((n, 1, 3))
+        if exact:
+            s = np.zeros((n, 1, 3), dtype = object)
+        else:
+            s = np.zeros((n, 1, 3))
+            
         c = c1(k)
         for i in range(n):
             s[i] = matrix[i, k[i], c[i]]
         return s
     elif d == 2:
-        s = np.zeros((n, 3, 6))
+        if alternative_basis:
+            m = 7
+            c2 = coefficients_quadratic_alternative
+        else:
+            m = 6
+            
+        if exact:
+            s = np.zeros((n, 3, m), dtype = object)
+        else:
+            s = np.zeros((n, 3, m))
+        
         cl = c1(k)
         cq = c2(k)
         for i in range(n):
             s[i] = matrix[np.ix_([i], cl[i], cq[i])]
         return s
     elif d == 3:
-        s = np.zeros((n, 6, 11))
+        if exact:
+            s = np.zeros((n, 6, 11), dtype = object)
+        else:
+            s = np.zeros((n, 6, 11))
+        
         cq = c2(k)
         cc = c3(k)
         for i in range(n):
@@ -445,7 +615,7 @@ def sub_matrix(matrix, d, k):
             
         return s
 
-
+        
 def sample_triangle(triangle, d, ret_number=False):
     """
     Returns a set of uniformly spaced points in the triangle. The number of points correspond to the dimension

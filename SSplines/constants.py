@@ -119,7 +119,8 @@ PS12_DUAL_POINTS_BARYCENTRIC_COORDINATES = [
     PS12_DUAL_POINTS_BARYCENTRIC_COORDINATES_CUBIC,
 ]
    
-PS12_DOMAIN_POINTS_BARYCENTRIC_COORDINATES_LINEAR = PS12_DUAL_POINTS_BARYCENTRIC_COORDINATES_LINEAR
+PS12_DOMAIN_POINTS_BARYCENTRIC_COORDINATES_LINEAR = \
+    np.average(PS12_DUAL_POINTS_BARYCENTRIC_COORDINATES_LINEAR, axis = 1)
 
 PS12_DOMAIN_POINTS_BARYCENTRIC_COORDINATES_QUADRATIC = \
     np.average(PS12_DUAL_POINTS_BARYCENTRIC_COORDINATES_QUADRATIC, axis = 1)
@@ -306,6 +307,8 @@ WEIGHTS_QUADRATIC = {
     11: Fraction(1,2),
 }
 
+WEIGHTS_QUADRATIC_ALTERNATIVE = WEIGHTS_QUADRATIC
+
 WEIGHTS_CUBIC = {
     0: Fraction(1,4),
     1: Fraction(1,2),
@@ -323,6 +326,25 @@ WEIGHTS_CUBIC = {
     13: 1,
     14: 1,
     15: Fraction(1,4),
+}
+
+WEIGHTS_CUBIC_ALTERNATIVE = {
+    0: Fraction(1,4),
+    1: Fraction(1,2),
+    2: 1,
+    3: Fraction(1,2),
+    4: Fraction(1,4),
+    5: Fraction(1,2),
+    6: 1,
+    7: Fraction(1,2),
+    8: Fraction(1,4),
+    9: Fraction(1,2),
+    10: 1,
+    11: Fraction(1,2),
+    12: Fraction(3,4),
+    13: Fraction(3,4),
+    14: Fraction(3,4),
+    15: 1,
 }
 
 WEIGHTS = [
@@ -375,6 +397,21 @@ KNOT_MULTIPLICITIES_QUADRATIC = {
     11: [2, 0, 1, 1, 0, 1, 0, 0, 0, 0]
 }
 
+KNOT_MULTIPLICITIES_QUADRATIC_ALTERNATIVE = {
+    0: [3, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+    1: [2, 1, 0, 1, 0, 1, 0, 0, 0, 0],
+    2: [1, 1, 1, 1, 0, 1, 0, 0, 0, 0],
+    3: [1, 2, 0, 1, 1, 0, 0, 0, 0, 0],
+    4: [0, 3, 0, 1, 1, 0, 0, 0, 0, 0],
+    5: [0, 2, 1, 1, 1, 0, 0, 0, 0, 0],
+    6: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+    7: [0, 1, 2, 0, 1, 1, 0, 0, 0, 0],
+    8: [0, 0, 3, 0, 1, 1, 0, 0, 0, 0],
+    9: [1, 0, 2, 0, 1, 1, 0, 0, 0, 0],
+    10: [1, 1, 1, 0, 1, 1, 0, 0, 0, 0],
+    11: [2, 0, 1, 1, 0, 1, 0, 0, 0, 0]
+}
+
 KNOT_MULTIPLICITIES_CUBIC = {
     0: [4,0,0,1,0,1,0,0,0,0],
     1: [3,1,0,1,0,1,0,0,0,0],
@@ -392,6 +429,25 @@ KNOT_MULTIPLICITIES_CUBIC = {
     13: [1,2,1,1,1,0,0,0,0,0],
     14: [1,1,2,0,1,1,0,0,0,0],
     15: [1,1,1,1,1,1,0,0,0,0]
+}
+
+KNOT_MULTIPLICITIES_CUBIC_ALTERNATIVE = {
+    0: [4,0,0,1,0,1,0,0,0,0],
+    1: [3,1,0,1,0,1,0,0,0,0],
+    2: [2,2,1,1,0,0,0,0,0,0],
+    3: [1,3,0,1,1,0,0,0,0,0],
+    4: [0,4,0,1,1,0,0,0,0,0],
+    5: [0,3,1,1,1,0,0,0,0,0],
+    6: [1,2,2,0,1,0,0,0,0,0],
+    7: [0,1,3,0,1,1,0,0,0,0],
+    8: [0,0,4,0,1,1,0,0,0,0],
+    9: [1,0,3,0,1,1,0,0,0,0],
+    10: [2,1,2,0,0,1,0,0,0,0],
+    11: [3,0,1,1,0,1,0,0,0,0],
+    12: [2,1,1,1,0,1,0,0,0,0],
+    13: [1,2,1,1,1,0,0,0,0,0],
+    14: [1,1,2,0,1,1,0,0,0,0],
+    15: [2,2,2,0,0,0,0,0,0,0]
 }
 
 KNOT_MULTIPLICITIES = [
