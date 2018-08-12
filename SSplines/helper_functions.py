@@ -122,6 +122,35 @@ def ps12_sub_triangles(triangle):
 
     return np.take(ps12_vertices(triangle), PS12_SUB_TRIANGLE_VERTICES, axis=0)
 
+def alternative_basis_transform_quadratic(exact = False):
+    if exact:
+        T = np.identity(12, dtype = object)
+        T[2:11:4,2:11:4] = np.array([[Fraction(1,2), Fraction(1,2),             0], \
+                                     [            0, Fraction(1,2), Fraction(1,2)], \
+                                     [Fraction(1,2),             0, Fraction(1,2)]], dtype = object)
+    else:
+        T = np.identity(12, dtype = float)
+        T[2:11:4,2:11:4] = np.array([[0.5, 0.5,   0], \
+                                     [0.0, 0.0, 0.5], \
+                                     [0.5, 0.0, 0.5]], dtype = float)
+
+    return T
+
+def alternative_basis_transform_cubic(exact = False)
+    if exact:
+        T = np.identity(16, dtype = object)
+        T[12:16,12:16] = np.array([[Fraction(3,4),            0,            0,Fraction(1,4)], \
+                                   [            0,Fraction(3,4),            0,Fraction(1,4)], \
+                                   [            0,            0,Fraction(3,4),Fraction(1,4)], \
+                                   [            0,            0,            0,            1]], dtype = object)
+    else:
+        T = np.identity(16, dtype = float)
+        T[12:16,12:16] = np.array([[0.75,   0,   0,0.25], \
+                                   [   0,0.75,   0,0.25], \
+                                   [   0,   0,0.75,0.25], \
+                                   [   0,   0,   0,   1]], dtype = float)
+
+    return T
 
 def r1_single(B, exact = False):
     """
@@ -184,20 +213,11 @@ def r2_single(B, exact = False, alternative_basis = False):
     R[9,  :  ] = [0, 0, -g[2], 0, 0, 0, -g[0], 0, 0, 0, -g[1], 0]
     
     if alternative_basis:
-        if exact:
-            T = np.identity(12, dtype = object)
-            T[2:11:4,2:11:4] = np.array([[Fraction(1,2), Fraction(1,2),             0], \
-                                         [            0, Fraction(1,2), Fraction(1,2)], \
-                                         [Fraction(1,2),             0, Fraction(1,2)]], dtype = object)
-        else:
-            T = np.identity(12, dtype = float)
-            T[2:11:4,2:11:4] = np.array([[0.5, 0.5,   0], \
-                                         [0.0, 0.0, 0.5], \
-                                         [0.5, 0.0, 0.5]], dtype = float)
+        T = alternative_basis_transform_quadratic(exact = exact)
         R = np.dot(R, T)
     
     return R
-
+    
 def r3_single(B, exact = False, alternative_basis = False):
     """
     Computes the cubic evaluation matrix for splines on the Powell-Sabin
@@ -231,18 +251,7 @@ def r3_single(B, exact = False, alternative_basis = False):
     R[11,:] = [0,0,0,0,0,0,0,0,0,0,B[2],b[0,1],2*B[1],0,0,0]
     
     if alternative_basis:
-        if exact:
-            T = np.identity(16, dtype = object)
-            T[12:16,12:16] = np.array([[Fraction(3,4),            0,            0,Fraction(1,4)], \
-                                       [            0,Fraction(3,4),            0,Fraction(1,4)], \
-                                       [            0,            0,Fraction(3,4),Fraction(1,4)], \
-                                       [            0,            0,            0,            1]], dtype = object)
-        else:
-            T = np.identity(16, dtype = float)
-            T[12:16,12:16] = np.array([[0.75,   0,   0,0.25], \
-                                       [   0,0.75,   0,0.25], \
-                                       [   0,   0,0.75,0.25], \
-                                       [   0,   0,   0,   1]], dtype = float)
+        T = alternative_basis_transform_cubic(exact = exact)
         R = np.dot(R, T)
 
     return R
@@ -276,7 +285,7 @@ def u1_single(A, exact = False):
     return U
 
 
-def u2_single(A, exact = False):
+def u2_single(A, exact = False, alternative_basis = False):
     """
     Computes the quadratic derivative matrix for Splines on the Powell-Sabin
     12-split of the triangle delineated by given vertices in the direction u.
@@ -303,9 +312,13 @@ def u2_single(A, exact = False):
     U[8, :] = [0, 0, 0, 0, 0, 0, 3*f * A[1], f * a[2, 0], 0, f * a[2, 1], 3*f * A[0], 0]
     U[9, :] = [0, 0, -2 * A[2], 0, 0, 0, -2 * A[0], 0, 0, 0, -2 * A[1], 0]
 
+    if alternative_basis:
+        T = alternative_basis_transform_quadratic(exact = exact)
+        U = np.dot(U, T)
+    
     return U
 
-def u3_single(A, exact = False):
+def u3_single(A, exact = False, alternative_basis = False):
     """
     Computes the cubic derivative matrix for Splines on the Powell-Sabin
     12-split of the triangle delineated by given vertices in the direction u.
@@ -323,20 +336,24 @@ def u3_single(A, exact = False):
     a = A[:, None] - A[None, :]  # alpha
     t = A[:, None] + A[None, :]  # tau
     
-    R[0,:] = [2*A[0],2*A[1],0,0,0,0,0,0,0,0,0,2*A[2],0,0,0,0]
-    R[1,:] = [0,a[0,2],A[1],0,0,0,0,0,0,0,0,0,2*A[2],0,0,0]
-    R[2,:] = [0,0,f*t[0,1],0,0,0,f*A[2],0,0,0,f*A[2],0,2*f*A[0],2*f*A[1],0,f*A[2]]
-    R[3,:] = [0,0,A[0],a[1,2],0,0,0,0,0,0,0,0,0,2*A[2],0,0]
-    R[4,:] = [0,0,0,2*A[0],2*A[1],2*A[2],0,0,0,0,0,0,0,0,0,0]
-    R[5,:] = [0,0,0,0,0,a[1,0],A[2],0,0,0,0,0,0,2*A[0],0,0]    
-    R[6,:] = [0,0,f*A[0],0,0,0,f*t[1,2],0,0,0,f*A[0],0,0,2*f*A[1],2*f*A[2],f*A[0]]
-    R[7,:] = [0,0,0,0,0,0,A[1],a[2,0],0,0,0,0,0,0,2*A[0],0]
-    R[8,:] = [0,0,0,0,0,0,0,2*A[1],2*A[2],2*A[0],0,0,0,0,0,0]
-    R[9,:] = [0,0,0,0,0,0,0,0,0,a[2,1],A[0],0,0,0,2*A[1],0]
-    R[10,:] = [0,0,f*A[1],0,0,0,f*A[1],0,0,0,f*t[0,2],0,2*f*A[0],0,2*f*A[2],f*A[1]]
-    R[11,:] = [0,0,0,0,0,0,0,0,0,0,A[2],a[0,1],2*A[1],0,0,0]
+    U[0,:] = [2*A[0],2*A[1],0,0,0,0,0,0,0,0,0,2*A[2],0,0,0,0]
+    U[1,:] = [0,a[0,2],A[1],0,0,0,0,0,0,0,0,0,2*A[2],0,0,0]
+    U[2,:] = [0,0,f*t[0,1],0,0,0,f*A[2],0,0,0,f*A[2],0,2*f*A[0],2*f*A[1],0,f*A[2]]
+    U[3,:] = [0,0,A[0],a[1,2],0,0,0,0,0,0,0,0,0,2*A[2],0,0]
+    U[4,:] = [0,0,0,2*A[0],2*A[1],2*A[2],0,0,0,0,0,0,0,0,0,0]
+    U[5,:] = [0,0,0,0,0,a[1,0],A[2],0,0,0,0,0,0,2*A[0],0,0]    
+    U[6,:] = [0,0,f*A[0],0,0,0,f*t[1,2],0,0,0,f*A[0],0,0,2*f*A[1],2*f*A[2],f*A[0]]
+    U[7,:] = [0,0,0,0,0,0,A[1],a[2,0],0,0,0,0,0,0,2*A[0],0]
+    U[8,:] = [0,0,0,0,0,0,0,2*A[1],2*A[2],2*A[0],0,0,0,0,0,0]
+    U[9,:] = [0,0,0,0,0,0,0,0,0,a[2,1],A[0],0,0,0,2*A[1],0]
+    U[10,:] = [0,0,f*A[1],0,0,0,f*A[1],0,0,0,f*t[0,2],0,2*f*A[0],0,2*f*A[2],f*A[1]]
+    U[11,:] = [0,0,0,0,0,0,0,0,0,0,A[2],a[0,1],2*A[1],0,0,0]
+
+    if alternative_basis:
+        T = alternative_basis_transform_cubic(exact = exact)
+        U = np.dot(U, T)
     
-    return R
+    return U
 
 def r1(B, exact = False, alternative_basis = False):
     """
@@ -384,6 +401,7 @@ def r3(B, exact = False, alternative_basis = False):
 
     for i, b in enumerate(B):
         R[i] = r3_single(b, exact = exact, alternative_basis = alternative_basis)
+
     return R
 
 def u1(A, exact = False):
@@ -403,7 +421,7 @@ def u1(A, exact = False):
     return U
 
 
-def u2(A, exact = False):
+def u2(A, exact = False, alternative_basis = False):
     """
     Computes U2 matrices for a series of directional coordinates.
     :param A: barycentric coordinates
@@ -415,11 +433,11 @@ def u2(A, exact = False):
         U = np.empty((len(A), 10, 12))
 
     for i, a in enumerate(A):
-        U[i] = u2_single(a, exact = exact)
+        U[i] = u2_single(a, exact = exact, alternative_basis = alternative_basis)
     
     return U
 
-def u3(A, exact = False):
+def u3(A, exact = False, alternative_basis = False):
     """
     Computes U3 matrices for a series of directional coordinates.
     :param A: barycentric coordinates
@@ -431,7 +449,7 @@ def u3(A, exact = False):
         U = np.empty((len(A), 12, 16))
 
     for i, a in enumerate(A):
-        U[i] = u3_single(a, exact = exact)
+        U[i] = u3_single(a, exact = exact, alternative_basis = alternative_basis)
 
     return U
     

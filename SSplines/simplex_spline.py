@@ -22,9 +22,9 @@ class SimplexSpline(object):
 
     def __call__(self, y, exact = False, barycentric = False):
         """
-        Evaluates the spline function at point(s) x.
-        :param x: set of points
-        :return: f(x)
+        Evaluates the spline function at point(s) y, either with Cartesian or with barycentric coordinates.
+        :param y: set of points
+        :return: f(y)
         """
         if barycentric:
             b = y
