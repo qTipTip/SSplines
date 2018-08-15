@@ -3,3 +3,4 @@ scipy
 sympy
 numpy
 quadpy
+pytest
