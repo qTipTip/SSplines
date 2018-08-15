@@ -2,5 +2,4 @@ matplotlib
 scipy
 sympy
 numpy
-quadpy
 pytest
