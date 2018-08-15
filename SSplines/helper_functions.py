@@ -11,25 +11,6 @@ from .constants import PS12_BARYCENTRIC_COORDINATES, PS12_SUB_TRIANGLE_VERTICES,
     PS12_DOMAIN_POINTS_BARYCENTRIC_COORDINATES_CUBIC
 
 
-def barycentric_coordinates_multiple_triangles(triangles, point, tol=1.0E-15):
-    """
-    Computes the barycentric coordinates of a single point with respect to a set of triangles.
-    :param triangles: set of vertices of triangle
-    :param point: a single point
-    :param tol: a tolerance for round off error
-    :return: a set of barycentric coordinates of the point w.r.t each triangle
-    """
-
-    raise NotImplementedError('Not implemented yet')
-
-    p = np.atleast_2d(point)
-    N = triangles.shape[0]
-    A = np.concatenate((triangles, np.ones((N, 3, 1))), axis=2)
-    b = np.concatenate((p, np.ones((1, 1))), axis=1)
-
-    x = np.linalg.solve(A, b[None, :])
-
-
 def barycentric_coordinates(triangle, points, tol=1.0E-15, exact=False):
     """
     Computes the barycentric coordinates of one or more point(s) with respect to the given triangle.
