@@ -1,14 +1,10 @@
 import numpy as np
 import quadpy
-import sympy as sp
 
-from SSplines import ps12_sub_triangles, gaussian_quadrature_data, gaussian_quadrature, SplineSpace
-from SSplines.constants import KNOT_MULTIPLICITIES_QUADRATIC
-from SSplines.symbolic import polynomial_pieces
+from SSplines import ps12_sub_triangles, SplineSpace
 
 
 def test_integration_second_basis_second_triangle():
-    x, y = sp.symbols('X Y')
     k = 2
 
     triangle = np.array([
@@ -16,17 +12,13 @@ def test_integration_second_basis_second_triangle():
         [1, 0],
         [0, 1]
     ])
-    b_sym = polynomial_pieces(triangle, KNOT_MULTIPLICITIES_QUADRATIC[2])[k]
     b_num = SplineSpace(triangle, 2).basis()[2]
     triangle_2 = ps12_sub_triangles(triangle)[k]
     expected_integral = 0.0117187
-    b, w = gaussian_quadrature_data(2)
-    b_sym_num = sp.lambdify((x, y), b_sym)
 
     def f(p):
         return b_num(p.T)
 
-    computed_integral = gaussian_quadrature(triangle_2, b_num, b, w)
     computed_integral = quadpy.triangle.integrate(f, triangle_2, quadpy.triangle.SevenPoint())
 
     np.testing.assert_almost_equal(computed_integral, expected_integral)

@@ -1,15 +1,14 @@
-import numpy as np
-import sympy as sp
 from fractions import Fraction
 
 import matplotlib as matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
+import sympy as sp
 
+from SSplines.dicts import KNOT_CONFIGURATION_TO_FACE_INDICES
 from .constants import PS12_BARYCENTRIC_COORDINATES, PS12_SUB_TRIANGLE_VERTICES, \
     PS12_DOMAIN_POINTS_BARYCENTRIC_COORDINATES_QUADRATIC, \
     PS12_DOMAIN_POINTS_BARYCENTRIC_COORDINATES_CUBIC
-
-from SSplines.dicts import KNOT_CONFIGURATION_TO_FACE_INDICES
 
 
 def barycentric_coordinates_multiple_triangles(triangles, point, tol=1.0E-15):
@@ -694,13 +693,10 @@ def signed_area(triangle, exact=False):
     v = triangle[:, 2, :] - triangle[:, 0, :]
     A = np.array((u.T, v.T)).T
 
-    return [Fraction(1 / 2) * sp.Matrix(A0).det() for A0 in A]
-    # if exact:
-    #    print("TODO")
-    #    return [Fraction(1/2) * sp.Matrix(A0).det() for A0 in A]
-
-    # else:
-    #    return 0.5 * np.linalg.det(A.astype(float))
+    if exact:
+        return [Fraction(1 / 2) * sp.Matrix(A0).det() for A0 in A]
+    else:
+        return 0.5 * np.linalg.det(A.astype(float))
 
 
 def area(triangle, exact=False):
