@@ -3,7 +3,7 @@ import quadpy
 import sympy as sp
 
 from SSplines import ps12_sub_triangles, gaussian_quadrature_data, gaussian_quadrature, SplineSpace
-from SSplines.dicts import KNOT_MULTIPLICITIES_QUADRATIC
+from SSplines.constants import KNOT_MULTIPLICITIES_QUADRATIC
 from SSplines.symbolic import polynomial_pieces
 
 
