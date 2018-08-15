@@ -113,7 +113,7 @@ def knot_configuration_area(knot_configuration, ps12):
     return a
 
 
-def polynomial_pieces(triangle, knot_multiplicities, s_basis=True, first_call=True):
+def polynomial_pieces(triangle, knot_multiplicities, s_basis=False, first_call=True):
     """
     Computes the twelve polynomial pieces of the spline with given knot
     multiplicities over the given triangle.
