@@ -136,7 +136,7 @@ def alternative_basis_transform_quadratic(exact = False):
 
     return T
 
-def alternative_basis_transform_cubic(exact = False)
+def alternative_basis_transform_cubic(exact = False):
     if exact:
         T = np.identity(16, dtype = object)
         T[12:16,12:16] = np.array([[Fraction(3,4),            0,            0,Fraction(1,4)], \
