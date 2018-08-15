@@ -1,14 +1,14 @@
 import math
+from fractions import Fraction
 
 import numpy as np
 import sympy as sp
-from fractions import Fraction
 
 import SSplines
+from SSplines.constants import KNOT_MULTIPLICITIES_QUADRATIC
 from SSplines.dicts import KNOT_CONFIGURATION_TO_SUBTRIANGLES, DELETED_KNOT_TO_TRIANGLE, \
     KNOT_CONFIGURATION_TO_FACE_INDICES
-from SSplines.constants import KNOT_MULTIPLICITIES_QUADRATIC
-    
+
 X, Y = sp.symbols('X Y')
 
 
@@ -113,7 +113,7 @@ def knot_configuration_area(knot_configuration, ps12):
     return a
 
 
-def polynomial_pieces(triangle, knot_multiplicities, first_call=True):
+def polynomial_pieces(triangle, knot_multiplicities, s_basis=True, first_call=True):
     """
     Computes the twelve polynomial pieces of the spline with given knot
     multiplicities over the given triangle.
@@ -158,11 +158,11 @@ def polynomial_pieces(triangle, knot_multiplicities, first_call=True):
 
     # If this is the final return statement in the recurrence, then normalize
     # by area to obtain the S-spline basis.
-    #if first_call:
-    #    area_knot_config = knot_configuration_area(knot_configuration, ps12)
-    #    area_full_triang = SSplines.area(ps12[[0, 1, 2]])
-    #    for i in range(len(polynomials)):
-    #        polynomials[i] *= (area_knot_config[0] / area_full_triang[0])
+    if s_basis and first_call:
+        area_knot_config = knot_configuration_area(knot_configuration, ps12)
+        area_full_triang = SSplines.area(ps12[[0, 1, 2]])
+        for i in range(len(polynomials)):
+            polynomials[i] *= (area_knot_config[0] / area_full_triang[0])
 
     return polynomials
 
