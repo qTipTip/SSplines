@@ -2,8 +2,7 @@
 ## Simplex Splines on the Powell-Sabin 12-split
 
 [![Build Status](https://travis-ci.org/qTipTip/SSplines.svg?branch=master)](https://travis-ci.org/qTipTip/SSplines)
-[![Coverage Status](https://coveralls.io/repos/github/qTipTip/SSplines2/badge.svg?branch=master)](https://coveralls.io/github/qTipTip/SSplines2?branch=master)
-
+[![Coverage Status](https://coveralls.io/repos/github/qTipTip/SSplines/badge.svg?branch=master)](https://coveralls.io/github/qTipTip/SSplines?branch=master)
 `SSplines` is a small Python library for the evaluation of simplex splines over
 the Powell-Sabin 12-split of a triangle. The evaluation makes use of the
 convenient matrix recurrence relation for the S-spline basis functions for
