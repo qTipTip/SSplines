@@ -2,7 +2,7 @@ import numpy as np
 
 from SSplines.dicts import KNOT_CONFIGURATION_TO_FACE_INDICES
 from SSplines.helper_functions import barycentric_coordinates, determine_sub_triangle, \
-    points_from_barycentric_coordinates
+    points_from_barycentric_coordinates, simplex_spline_graphic_small
 from SSplines.symbolic import polynomial_pieces
 
 
@@ -40,3 +40,9 @@ class SimplexSpline(object):
         else:
             return np.array([self.polynomial_pieces[k[i]].subs({'X': x[i][0], 'Y': x[i][1]}) for i in range(len(x))],
                             dtype=np.float)
+
+    def display(self):
+        """
+        Displays the SimplexSpline using graphical notation.
+        """
+        simplex_spline_graphic_small(self.knot_multiplicities)
