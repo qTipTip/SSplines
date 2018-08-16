@@ -48,7 +48,11 @@ def points_from_barycentric_coordinates(triangle, b):
 
     b = np.atleast_2d(b)
     t = np.atleast_2d(triangle)
-    p = np.dot(b, t)  # compute a broadcasted dot product
+
+    if t.ndim == 3:
+        p = np.einsum('jl,ilk->ijk', b, t)
+    else:
+        p = np.dot(b, t)
     return p
 
 
