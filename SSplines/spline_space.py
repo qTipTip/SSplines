@@ -6,7 +6,7 @@ from SSplines.spline_function import SplineFunction
 
 class SplineSpace(object):
     """
-    Represents a space of spline functions of degree 0/1/2 over the PS12-split of a triangle.
+    Represents a space of spline functions of degree 0/1/2/3 over the PS12-split of a triangle.
     """
 
     def __init__(self, triangle, degree):
@@ -18,7 +18,13 @@ class SplineSpace(object):
 
         self.triangle = np.array(triangle)
         self.degree = int(degree)
-        self.dimension = 10 if degree == 1 else 12
+        
+        if degree == 0:
+            self.dimension = 12
+        elif degree == 1:
+            self.dimension = 10
+        elif degree >= 2:
+            self.dimension = (degree**2 + 3*degree + 14) // 2
 
     def function(self, coefficients):
         """
@@ -64,9 +70,9 @@ class SplineSpace(object):
 
     def __str__(self):
         return """
-Degree: {}
+Degree   : {}
 Dimension: {}
-Vertices: 
+Vertices : 
     v1: ({}, {})  
     v2: ({}, {})
     v3: ({}, {})

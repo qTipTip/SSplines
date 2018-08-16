@@ -23,7 +23,7 @@ def test_values_quadratic_basis():
 
     for basis_num in range(12):
         b_num = S.basis()[basis_num]
-        b_sym = polynomial_pieces(triangle, KNOT_MULTIPLICITIES_QUADRATIC[basis_num])
+        b_sym = polynomial_pieces(triangle, KNOT_MULTIPLICITIES_QUADRATIC[basis_num], s_basis=True)
 
         subtriangles = ps12_sub_triangles(triangle)
 

@@ -102,5 +102,4 @@ def test_points_from_barycentric_coordinates_multiple_triangles():
     )
     computed_points = points_from_barycentric_coordinates(triangles, b)
 
-    print(expected_points.shape, computed_points.shape)
     np.testing.assert_almost_equal(computed_points, expected_points)

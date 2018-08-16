@@ -20,7 +20,7 @@ def test_laplacian_quadratic_basis_functions():
     points = sample_triangle(triangle, 10)
     for basis_num in range(12):
         b_num = S.basis()[basis_num]
-        b_sym = polynomial_pieces(triangle, KNOT_MULTIPLICITIES_QUADRATIC[basis_num])
+        b_sym = polynomial_pieces(triangle, KNOT_MULTIPLICITIES_QUADRATIC[basis_num], s_basis=True)
 
         for p in points:
             b = barycentric_coordinates(triangle, p)
@@ -43,7 +43,7 @@ def test_gradient_quadratic_basis_functions():
     points = sample_triangle(triangle, 10)
     for basis_num in range(12):
         b_num = S.basis()[basis_num]
-        b_sym = polynomial_pieces(triangle, KNOT_MULTIPLICITIES_QUADRATIC[basis_num])
+        b_sym = polynomial_pieces(triangle, KNOT_MULTIPLICITIES_QUADRATIC[basis_num], s_basis=True)
 
         for p in points:
             b = barycentric_coordinates(triangle, p)
@@ -66,7 +66,7 @@ def test_divergence_quadratic_basis_functions():
     points = sample_triangle(triangle, 10)
     for basis_num in range(12):
         b_num = S.basis()[basis_num]
-        b_sym = polynomial_pieces(triangle, KNOT_MULTIPLICITIES_QUADRATIC[basis_num])
+        b_sym = polynomial_pieces(triangle, KNOT_MULTIPLICITIES_QUADRATIC[basis_num], s_basis=True)
 
         for p in points:
             b = barycentric_coordinates(triangle, p)

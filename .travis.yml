@@ -4,9 +4,9 @@ python:
 install:
   - pip install numpy
   - pip install sympy
-  - pip install quadpy
   - pip install coveralls
   - pip install pytest-cov
+  - pip install matplotlib
 script:
   - pytest --cov SSplines/
 after_success:
