@@ -29,7 +29,7 @@ class SimplexSpline(object):
             b = y
             x = points_from_barycentric_coordinates(self.triangle, b)
         else:
-            x = y
+            x = np.atleast_2d(y)
             b = barycentric_coordinates(self.triangle, x, exact=exact)
 
         k = determine_sub_triangle(b)
