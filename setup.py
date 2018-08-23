@@ -2,9 +2,9 @@ from setuptools import setup
 
 setup(
     name='SSplines',
-    version='2.0.0',
+    version='2.0.1',
     packages=['SSplines'],
-    url='https://github.com/qTipTip/SSplines2',
+    url='https://github.com/qTipTip/SSplines',
     license='MIT',
     author='Ivar Stangeby',
     author_email='istangeby@gmail.com',
