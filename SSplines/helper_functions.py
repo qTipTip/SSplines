@@ -142,6 +142,7 @@ def r1_single(B, exact=False):
     """
     Computes the linear evaluation matrix for Splines on the Powell-Sabin
     12-split of the triangle delineated by given vertices, evaluated at x.
+    :param exact: whether to use exact arithmetic. Defaults to false, as it is slow.
     :param B: barycentric coordinates of point of evaluation
     :return: (12x10) linear evaluation matrix.
     """
@@ -173,6 +174,7 @@ def r2_single(B, exact=False, alternative_basis=False):
     """
     Computes the quadratic evaluation matrix for Splines on the Powell-Sabin
     12-split of the triangle delineated by given vertices, evaluated at x.
+    :param exact: whether to use exact arithmetic. Defaults to false, as it is slow.
     :param B: barycentric coordinates of point of evaluation
     :return: (10x12) quadratic evaluation matrix.
     """
@@ -209,6 +211,7 @@ def r3_single(B, exact=False, alternative_basis=False):
     """
     Computes the cubic evaluation matrix for splines on the Powell-Sabin
     12-split of the triangle delineated by given vertices, evaluated at x.
+    :param exact: whether to use exact arithmetic. Defaults to false, as it is slow.
     :param B: barycentric coordinates of point of evaluation
     :return: (12x16) cubic evaluation matrix.
     """
@@ -248,6 +251,7 @@ def u1_single(A, exact=False):
     """
     Computes the linear derivative matrix for Splines on the Powell-Sabin
     12-split of the triangle delineated by given vertices in the direction u.
+    :param exact: whether to use exact arithmetic. Defaults to false, as it is slow.
     :param A: directional coordinates w.r.t some triangle
     :return: (12x10) linear derivative matrix.
     """
@@ -277,6 +281,7 @@ def u2_single(A, exact=False, alternative_basis=False):
     """
     Computes the quadratic derivative matrix for Splines on the Powell-Sabin
     12-split of the triangle delineated by given vertices in the direction u.
+    :param exact: whether to use exact arithmetic. Defaults to false, as it is slow.
     :param A: directional coordinates wrt to triangle
     :return: (10x12) quadratic derivative matrix.
     """
@@ -311,6 +316,7 @@ def u3_single(A, exact=False, alternative_basis=False):
     """
     Computes the cubic derivative matrix for Splines on the Powell-Sabin
     12-split of the triangle delineated by given vertices in the direction u.
+    :param exact: whether to use exact arithmetic. Defaults to false, as it is slow.
     :param A: directional coordinates wrt to triangle
     :return: (12x16) cubic derivative matrix.
     """
@@ -348,6 +354,7 @@ def u3_single(A, exact=False, alternative_basis=False):
 def r1(B, exact=False, alternative_basis=False):
     """
     Computes R1 matrices for a series of barycentric coordinates.
+    :param exact: whether to use exact arithmetic. Defaults to false, as it is slow.
     :param B: barycentric coordinates
     :return: (len(B), 12, 10) array of matrices
     """
@@ -365,6 +372,7 @@ def r1(B, exact=False, alternative_basis=False):
 def r2(B, exact=False, alternative_basis=False):
     """
     Computes R2 matrices for a series of barycentric coordinates.
+    :param exact: whether to use exact arithmetic. Defaults to false, as it is slow.
     :param B: barycentric coordinates
     :return: (len(B), 10, 12) array of matrices
     """
@@ -382,6 +390,8 @@ def r2(B, exact=False, alternative_basis=False):
 def r3(B, exact=False, alternative_basis=False):
     """
     Computes R2 matrices for a series of barycentric coordinates.
+
+    :param exact: whether to use exact arithmetic. Defaults to false, as it is slow.
     :param B: barycentric coordinates
     :return: (len(B), 12, 16) array of matrices
     """
@@ -399,6 +409,7 @@ def r3(B, exact=False, alternative_basis=False):
 def u1(A, exact=False):
     """
     Computes U1 matrices for a series of directional coordinates.
+    :param exact: whether to use exact arithmetic. Defaults to false, as it is slow.
     :param A: directional coordinates
     :return: (len(A), 12, 10) array of matrices
     """
@@ -416,6 +427,8 @@ def u1(A, exact=False):
 def u2(A, exact=False, alternative_basis=False):
     """
     Computes U2 matrices for a series of directional coordinates.
+    :param exact: whether to use exact arithmetic. Defaults to false, as it is slow.
+
     :param A: barycentric coordinates
     :return: (len(A), 10, 12) array of matrices
     """
@@ -433,6 +446,7 @@ def u2(A, exact=False, alternative_basis=False):
 def u3(A, exact=False, alternative_basis=False):
     """
     Computes U3 matrices for a series of directional coordinates.
+    :param exact: whether to use exact arithmetic. Defaults to false, as it is slow.
     :param A: barycentric coordinates
     :return: (len(A), 12, 16) array of matrices
     """
@@ -451,6 +465,7 @@ def evaluate_non_zero_basis_splines(d, b, k, exact=False, alternative_basis=Fals
     """
     Evaluates the non-zero basis splines of degree d over a set of point(s) represented by its barycentric coordinates
     over the PS12 split of a triangle.
+    :param exact: whether to use exact arithmetic. Defaults to false, as it is slow.
     :param d: degree of spline
     :param b: barycentric coordinates
     :param k: a list of sub-triangles corresponding to each barycentric coordinate given.
@@ -484,6 +499,7 @@ def evaluate_non_zero_basis_derivatives(d, r, b, a, k, exact=False, alternative_
     """
     Evaluates the r'th directional derivative of the non-zero basis splines of degree d at point x
     over the Powell-Sabin 12 split of the given triangle.
+    :param exact: whether to use exact arithmetic. Defaults to false, as it is slow.
     :param d: spline degree
     :param r: order of derivative
     :param b: barycentric coordinates
