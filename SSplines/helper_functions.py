@@ -95,7 +95,6 @@ def ps12_vertices(triangle):
     """
 
     return points_from_barycentric_coordinates(triangle, PS12_BARYCENTRIC_COORDINATES)
-    # return points_from_barycentric_coordinates(triangle, PS12_BARYCENTRIC_COORDINATES.astype('float'))
 
 
 def ps12_sub_triangles(triangle):
