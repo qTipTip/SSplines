@@ -14,6 +14,7 @@ from .constants import PS12_BARYCENTRIC_COORDINATES, PS12_SUB_TRIANGLE_VERTICES,
 def barycentric_coordinates(triangle, points, tol=1.0E-15, exact=False):
     """
     Computes the barycentric coordinates of one or more point(s) with respect to the given triangle.
+    :param exact: whether to use exact arithmetic. Defaults to false, as it is slow.
     :param triangle: vertices of the triangle
     :param points: a set of points
     :param tol: a tolerance for round off error
