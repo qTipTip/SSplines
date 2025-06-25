@@ -39,7 +39,7 @@ class SimplexSpline(object):
                             dtype=object)
         else:
             return np.array([self.polynomial_pieces[k[i]].subs({'X': x[i][0], 'Y': x[i][1]}) for i in range(len(x))],
-                            dtype=np.float)
+                            dtype=float)
 
     def display(self):
         """
