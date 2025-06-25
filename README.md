@@ -8,7 +8,7 @@
 [![DOI](https://zenodo.org/badge/121780435.svg)](https://doi.org/10.5281/zenodo.15742326)
 
 SSplines is a Python library for the evaluation of simplex splines over the Powell-Sabin 12-split of a triangle. The library provides efficient evaluation using the matrix recurrence relation for S-spline basis functions for constant, linear, and quadratic simplex splines as developed by [Cohen, Lyche and Riesenfeld](http://www.ams.org/journals/mcom/2013-82-283/S0025-5718-2013-02664-6/S0025-5718-2013-02664-6.pdf).
-
+The SSplines library was developed as part of the thesis: [Simplex Splines on the Powell-Sabin 12-Split](http://hdl.handle.net/10852/64070).
 ## Features
 
 - **SplineFunction objects**: Callable spline functions over a single triangle
