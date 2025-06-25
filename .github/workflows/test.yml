@@ -44,10 +44,12 @@ jobs:
 
     - name: Upload coverage to GitHub
       if: matrix.os == 'ubuntu-latest'  # Only upload once
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: htmlcov/
+        retention-days: 30
+        compression-level: 6
 
   # This job will be required for branch protection
   test-summary:
