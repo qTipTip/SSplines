@@ -1,0 +1,105 @@
+name: Release to PyPI
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers on version tags like v3.0.0
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.13"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Install dependencies
+      run: |
+        uv pip install -e ".[dev]"
+
+    - name: Run tests
+      run: |
+        uv run pytest
+
+  build-and-publish:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write  # Required for trusted publishing
+      contents: write  # Required for creating releases
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Get full history for proper versioning
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.13"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Build package with uv
+      run: |
+        uv build
+
+    - name: Check package
+      run: |
+        uv run twine check dist/*
+
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      # This uses trusted publishing - no API tokens needed!
+
+    - name: Extract changelog for this version
+      id: changelog
+      run: |
+        # Extract the section for this version from CHANGELOG.md
+        VERSION=${GITHUB_REF#refs/tags/v}
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        
+        # Extract changelog section between [VERSION] and next [VERSION] or end of file
+        CHANGELOG=$(awk "/^\## \[$VERSION\]/{flag=1; next} /^\## \[/{flag=0} flag" CHANGELOG.md)
+        
+        # If no specific section found, use a default
+        if [ -z "$CHANGELOG" ]; then
+          CHANGELOG="See the [full changelog](https://github.com/qTipTip/SSplines/compare/v2.0.1...${GITHUB_REF_NAME}) for details."
+        fi
+        
+        # Save changelog to output (handle multiline)
+        {
+          echo "CHANGELOG<<EOF"
+          echo "$CHANGELOG"
+          echo "EOF"
+        } >> $GITHUB_OUTPUT
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/*
+        generate_release_notes: true
+        body: |
+          ## Changes in ${{ github.ref_name }}
+          
+          ${{ steps.changelog.outputs.CHANGELOG }}
+          
+          ---
+          
+          **Installation**: `pip install SSplines==${{ steps.changelog.outputs.VERSION }}`
+          
+          **Full Changelog**: https://github.com/qTipTip/SSplines/compare/v2.0.1...${{ github.ref_name }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
