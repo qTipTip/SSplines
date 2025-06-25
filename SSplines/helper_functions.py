@@ -32,7 +32,7 @@ def barycentric_coordinates(triangle, points, tol=1.0E-15, exact=False):
     else:
         A = np.concatenate((triangle.astype(float), np.ones((3, 1))), axis=1).T  # append a column of ones
         b = np.concatenate((p.astype(float), np.ones((len(p), 1))), axis=1)  # append a column of ones
-        x = np.linalg.solve(A[None, :, :], b)  # broadcast A to solve all systems at once
+        x = np.linalg.solve(A,  b.T).T  # broadcast A to solve all systems at once
 
         x[abs(x) < tol] = 0  # remove round off errors around zero
 
@@ -69,7 +69,7 @@ def directional_coordinates(triangle, direction):
     A = np.concatenate((triangle, np.ones((3, 1))), axis=1).T  # append a column of ones
     b = np.concatenate((u, np.zeros((len(u), 1))), axis=1)  # append a column of zeros
 
-    a = np.linalg.solve(A[None, :, :], b)  # broadcast A to solve all systems at once
+    a = np.linalg.solve(A, b.T).T  # broadcast A to solve all systems at once
     return a
 
 
@@ -753,7 +753,7 @@ def hermite_basis_coefficients(triangle, outward_normal_derivative=False):
     x32, y32 = p3 - p2
     x23, y23 = p2 - p3
 
-    d = signed_area(triangle)
+    d = signed_area(triangle).item()
 
     p12 = 3 * np.linalg.norm(p1 - p2)
     p23 = 3 * np.linalg.norm(p2 - p3)
