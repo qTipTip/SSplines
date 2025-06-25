@@ -1,5 +1,0 @@
-matplotlib
-scipy=1.1.1
-sympy
-numpy
-pytest

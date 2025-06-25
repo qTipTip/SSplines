@@ -26,4 +26,5 @@ dev = [
     "matplotlib>=3.10.3",
     "notebook>=7.4.3",
     "pytest>=8.4.1",
+    "pytest-coverage>=0.0",
 ]
