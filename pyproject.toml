@@ -1,30 +1,69 @@
 [project]
 name = "SSplines"
-version = "2.0.1"
-description = "A small Python library for the evaluation of S-splines on the Powell-Sabin 12-split of a triangle."
+version = "3.0.0"
+description = "A Python library for the evaluation of S-splines on the Powell-Sabin 12-split of a triangle."
 authors = [
     {name = "Ivar Stangeby", email = "istangeby@gmail.com"}
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13"  # BREAKING: Now requires Python 3.13+
 dependencies = [
-    "numpy>=1.22.2",
-    "sympy>=1.14.0",
+    "numpy>=1.24.0",    # Modern numpy
+    "sympy>=1.10",      # Symbolic mathematics  
+]
+keywords = [
+    "splines", "finite-element", "Powell-Sabin", "simplex-splines", 
+    "numerical-analysis", "computational-geometry", "interpolation"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.1",
+    "pytest-cov",
+    "matplotlib>=3.5.1",
+    "build",
+    "twine",
 ]
 
 [project.urls]
 Homepage = "https://github.com/qTipTip/SSplines"
 Repository = "https://github.com/qTipTip/SSplines"
+Documentation = "https://github.com/qTipTip/SSplines"
+"Bug Tracker" = "https://github.com/qTipTip/SSplines/issues"
+Changelog = "https://github.com/qTipTip/SSplines/releases"
+Citation = "https://doi.org/10.5281/zenodo.15742326"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[dependency-groups]
-dev = [
-    "matplotlib>=3.10.3",
-    "notebook>=7.4.3",
-    "pytest>=8.4.1",
-    "pytest-coverage>=0.0",
+[tool.hatch.build.targets.wheel]
+packages = ["SSplines"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "SSplines/",
+    "tests/", 
+    "README.md",
+    "CITATION.cff",
+    "LICENSE",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.0.1",
+    "pytest-cov", 
+    "matplotlib>=3.5.1",
+    "build",
+    "twine",
 ]
