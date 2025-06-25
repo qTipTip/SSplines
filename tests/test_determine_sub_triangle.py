@@ -24,7 +24,7 @@ def test_determine_sub_triangle_multiple():
     computed = determine_sub_triangle(bary_coords)
     np.testing.assert_almost_equal(computed, expected)
 
-    assert computed.dtype == np.int
+    assert computed.dtype == int
 
 
 def test_determine_sub_triangle_single():
@@ -49,4 +49,4 @@ def test_determine_sub_triangle_single():
         computed = determine_sub_triangle(b)
         np.testing.assert_almost_equal(computed, e)
 
-        assert computed.dtype == np.int
+        assert computed.dtype == int

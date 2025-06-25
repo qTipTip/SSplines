@@ -85,7 +85,7 @@ def determine_sub_triangle(bary_coords):
     b = np.atleast_2d(bary_coords)
     b1, b2, b3 = b[:, 0], b[:, 1], b[:, 2]
     s = 32 * (b1 > 0.5) + 16 * (b2 >= 0.5) + 8 * (b3 >= 0.5) + 4 * (b1 > b2) + 2 * (b1 > b3) + (b2 >= b3)
-    return np.vectorize(index_lookup_table.get)(s).astype(np.int)
+    return np.vectorize(index_lookup_table.get)(s).astype(int)
 
 
 def ps12_vertices(triangle):
@@ -541,7 +541,7 @@ def coefficients_cubic(k):
         [1, 2, 3, 5, 6, 10, 12, 13, 14, 15, -1],
         [2, 3, 5, 6, 7, 10, 12, 13, 14, 15, -1], [2, 5, 6, 7, 9, 10, 12, 13, 14, 15, -1],
         [2, 6, 7, 9, 10, 11, 12, 13, 14, 15, -1]
-    ], dtype=np.int)
+    ], dtype=int)
     return c3[k]
 
 
@@ -558,7 +558,7 @@ def coefficients_quadratic_alternative(k):
         [2, 3, 4, 5, 6, 7, 10], [2, 5, 6, 7, 8, 9, 10], [2, 6, 7, 8, 9, 10, 11],
         [1, 2, 6, 9, 10, 11, -1], [1, 2, 3, 6, 10, 11, -1], [1, 2, 3, 5, 6, 10, -1],
         [2, 3, 5, 6, 7, 10, -1], [2, 5, 6, 7, 9, 10, -1], [2, 6, 7, 9, 10, 11, -1]
-    ], dtype=np.int)
+    ], dtype=int)
 
     return c2[k]
 
@@ -576,7 +576,7 @@ def coefficients_quadratic(k):
         [2, 3, 4, 5, 6, 7], [5, 6, 7, 8, 9, 10], [6, 7, 8, 9, 10, 11],
         [1, 2, 6, 9, 10, 11], [1, 2, 3, 6, 10, 11], [1, 2, 3, 5, 6, 10],
         [2, 3, 5, 6, 7, 10], [2, 5, 6, 7, 9, 10], [2, 6, 7, 9, 10, 11]
-    ], dtype=np.int)
+    ], dtype=int)
     return c2[k]
 
 
@@ -590,7 +590,7 @@ def coefficients_linear(k):
         [1, 4, 7], [2, 4, 8], [2, 5, 8],
         [5, 6, 9], [3, 6, 9], [3, 7, 9],
         [4, 7, 9], [4, 8, 9], [5, 8, 9]
-    ], dtype=np.int)
+    ], dtype=int)
 
     return c1[k]
 
@@ -1008,11 +1008,11 @@ def simplex_spline_graphic_small(mm, scale=2, filename=False, is_visible=True):
     # Edges
     x = [v4[0], v2[0], v3[0], v1[0], v4[0]]
     y = [v4[1], v2[1], v3[1], v1[1], v4[1]]
-    line = matplotlib.lines.Line2D(x, y, lw=int(2), color='black', zorder=2)
+    line = matplotlib.lines.Line2D(x, y, lw=2, color='black', zorder=2)
     ax.add_line(line)
     line = matplotlib.lines.Line2D([int(min(x) - 5), int(max(x) + 5)],
                                    [int(min(y) - 6), int(max(y) + 5)],
-                                   lw=int(2), color='white', zorder=0)
+                                   lw=2, color='white', zorder=0)
 
     ax.add_line(line)
 
@@ -1029,7 +1029,7 @@ def simplex_spline_graphic_small(mm, scale=2, filename=False, is_visible=True):
         for j in range(i, 6):
             x = [Lv[i][0], Lv[j][0]]
             y = [Lv[i][1], Lv[j][1]]
-            line = matplotlib.lines.Line2D(x, y, lw=int(1), color='black', zorder=2)
+            line = matplotlib.lines.Line2D(x, y, lw=1, color='black', zorder=2)
             ax.add_line(line)
 
     # Color the faces.

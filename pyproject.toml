@@ -1,0 +1,28 @@
+[project]
+name = "SSplines"
+version = "2.0.1"
+description = "A small Python library for the evaluation of S-splines on the Powell-Sabin 12-split of a triangle."
+authors = [
+    {name = "Ivar Stangeby", email = "istangeby@gmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "numpy>=1.22.2",
+    "sympy>=1.14.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/qTipTip/SSplines"
+Repository = "https://github.com/qTipTip/SSplines"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "matplotlib>=3.10.3",
+    "pytest>=8.4.1",
+]

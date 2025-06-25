@@ -26,7 +26,7 @@ PS12_DUAL_POINTS_INDEX_LINEAR = np.array([
     [ 8],
     [ 9],
     [10],
-], dtype = np.int)
+], dtype = int)
 
 PS12_DUAL_POINTS_INDEX_QUADRATIC = np.array([
     [1, 1],
@@ -41,7 +41,7 @@ PS12_DUAL_POINTS_INDEX_QUADRATIC = np.array([
     [3, 6],
     [6,10],
     [6, 1]
-], dtype = np.int)
+], dtype = int)
 
 PS12_DUAL_POINTS_INDEX_QUADRATIC_ALTERNATIVE = np.array([
     [1, 1],
@@ -56,7 +56,7 @@ PS12_DUAL_POINTS_INDEX_QUADRATIC_ALTERNATIVE = np.array([
     [3, 6],
     [3,10],
     [6, 1]
-], dtype = np.int)
+], dtype = int)
 
 
 PS12_DUAL_POINTS_INDEX_CUBIC = np.array([
@@ -76,7 +76,7 @@ PS12_DUAL_POINTS_INDEX_CUBIC = np.array([
     [2, 4, 5],
     [3, 5, 6],
     [1, 2, 3],
-], dtype = np.int)
+], dtype = int)
 
 PS12_DUAL_POINTS_INDEX_CUBIC_ALTERNATIVE = np.array([
     [1, 1, 1],
@@ -95,7 +95,7 @@ PS12_DUAL_POINTS_INDEX_CUBIC_ALTERNATIVE = np.array([
     [2, 2, 10],
     [3, 3, 10],
     [1, 2,  3],
-], dtype = np.int)
+], dtype = int)
 
 
 PS12_DUAL_POINTS_BARYCENTRIC_COORDINATES_LINEAR = np.array(
@@ -154,10 +154,10 @@ PS12_SUB_TRIANGLE_VERTICES = np.array([
     [4, 9, 7],
     [4, 8, 9],
     [5, 9, 8]
-], dtype=np.int)
+], dtype=int)
 
-UX = np.array([1, 0], dtype = np.int)
-UY = np.array([0, 1], dtype = np.int)
+UX = np.array([1, 0], dtype = int)
+UY = np.array([0, 1], dtype = int)
 
 DELETED_KNOT_TO_TRIANGLE = {
     (0, 1, 3, 4): (0, 3, 4),  #
