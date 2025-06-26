@@ -8,8 +8,8 @@ authors:
     given-names: "Ivar Haugaløkken"
     email: "istangeby@gmail.com"
     orcid: "https://orcid.org/0000-0002-7697-7526"
-version: "2.0.1"
-date-released: "2024-12-20"
+version: "3.0.0"
+date-released: "2025-06-26"
 license: MIT
 repository-code: "https://github.com/qTipTip/SSplines"
 url: "https://github.com/qTipTip/SSplines"
