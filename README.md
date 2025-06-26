@@ -3,7 +3,7 @@
 **Simplex Splines on the Powell-Sabin 12-split**
 
 [![Build Status](https://travis-ci.org/qTipTip/SSplines.svg?branch=master)](https://travis-ci.org/qTipTip/SSplines)
-[![Coverage Status](https://coveralls.io/repos/github/qTipTip/SSplines/badge.svg?branch=master)](https://coveralls.io/github/qTipTip/SSplines?branch=master)
+[![codecov](https://codecov.io/gh/qTipTip/SSplines/graph/badge.svg?token=WXYTJ096GP)](https://codecov.io/gh/qTipTip/SSplines)
 [![Downloads](http://pepy.tech/badge/ssplines)](http://pepy.tech/project/ssplines)
 [![DOI](https://zenodo.org/badge/121780435.svg)](https://doi.org/10.5281/zenodo.15742326)
 
