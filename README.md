@@ -2,10 +2,12 @@
 
 **Simplex Splines on the Powell-Sabin 12-split**
 
-[![Build Status](https://travis-ci.org/qTipTip/SSplines.svg?branch=master)](https://travis-ci.org/qTipTip/SSplines)
-[![Coverage Status](https://coveralls.io/repos/github/qTipTip/SSplines/badge.svg?branch=master)](https://coveralls.io/github/qTipTip/SSplines?branch=master)
-[![Downloads](http://pepy.tech/badge/ssplines)](http://pepy.tech/project/ssplines)
-[![DOI](https://zenodo.org/badge/121780435.svg)](https://doi.org/10.5281/zenodo.15742326)
+[![Tests](https://github.com/qTipTip/SSplines/actions/workflows/test.yml/badge.svg)](https://github.com/qTipTip/SSplines/actions/workflows/test.yml)
+[![PyPI version](https://badge.fury.io/py/SSplines.svg)](https://badge.fury.io/py/SSplines)
+[![Python versions](https://img.shields.io/pypi/pyversions/SSplines.svg)](https://pypi.org/project/SSplines/)
+[![Downloads](https://pepy.tech/badge/ssplines)](https://pepy.tech/project/ssplines)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![codecov](https://codecov.io/gh/qTipTip/SSplines/graph/badge.svg?token=WXYTJ096GP)](https://codecov.io/gh/qTipTip/SSplines)
 
 SSplines is a Python library for the evaluation of simplex splines over the Powell-Sabin 12-split of a triangle. The library provides efficient evaluation using the matrix recurrence relation for S-spline basis functions for constant, linear, and quadratic simplex splines as developed by [Cohen, Lyche and Riesenfeld](http://www.ams.org/journals/mcom/2013-82-283/S0025-5718-2013-02664-6/S0025-5718-2013-02664-6.pdf).
 The SSplines library was developed as part of the thesis: [Simplex Splines on the Powell-Sabin 12-Split](http://hdl.handle.net/10852/64070).
